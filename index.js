@@ -91,6 +91,7 @@ class Gravity {
     reset() {
         this.planets = [];
         this.element.innerHTML = "";
+        this.startSim();
     }
 
     initColors() {
