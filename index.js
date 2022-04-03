@@ -1,9 +1,12 @@
 const COLORS = ['#ffffff', '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0000ff'];
-const G = 1;
+
+const G = 1; // Gravitaional constant
 const MIN_DISPLACEMENT = 100;
+const MAX_STARTING_VELOCITY = 3;
+const BORDER_WIDTH = 10;
+
 const STEP_TIME = 1;
 const INTERVAL = 10;
-const MAX_STARTING_VELOCITY = 10;
 
 var id = 1;
 function nextId() {
@@ -60,7 +63,7 @@ class Gravity {
 
     addDomElement(planet) {
         const div = document.createElement('div');
-        div.appendChild(document.createTextNode("."));
+        div.appendChild(document.createTextNode(""));
         div.classList.add('planet');
         div.style.position = 'absolute';
         div.style.left = planet.position.x + 'px';
@@ -222,16 +225,16 @@ class Planet {
     }
 
     bounce(height, width) {
-        if (this.position.x > width) {
+        if (this.position.x > width - BORDER_WIDTH) {
             this.velocity.x *= -1;
         }
-        if (this.position.x < 0) {
+        if (this.position.x < 0 - BORDER_WIDTH) {
             this.velocity.x *= -1;
         }
-        if (this.position.y <-height) {
+        if (this.position.y < -height + BORDER_WIDTH) {
             this.velocity.y *= -1;
         }
-        if (this.position.y > 0) {
+        if (this.position.y > 0 + BORDER_WIDTH) {
             this.velocity.y *= -1;
         }
     }
