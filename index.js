@@ -63,12 +63,9 @@ class Gravity {
     step() {
         for (let i = 0; i < this.planets.length; i++) {
             const planet = this.planets[i];
-            // planet.calculateForce(this.planets)
-            //     .then(planet.step())
-            //     .then(this.updatePlanetPositions());
-            planet.calculateForce(this.planets);
-            planet.step();
-            this.updatePlanetPositions();
+            planet.calculateForce(this.planets)
+                .then(planet.step())
+                .then(this.updatePlanetPositions());
         }
     }
 
@@ -137,7 +134,7 @@ class Planet {
         this.resultantForce = new Vector(0, 0);
     }
 
-    calculateForce(planets) {
+    async calculateForce(planets) {
         const resultantForce = new Vector(0, 0);
         for (let i = 0; i < planets.length; i++) {
             const otherPlanet = planets[i];
