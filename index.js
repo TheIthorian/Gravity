@@ -3,6 +3,7 @@ const G = 1;
 const MIN_DISPLACEMENT = 100;
 const STEP_TIME = 1;
 const INTERVAL = 10;
+const MAX_STARTING_VELOCITY = 10;
 
 var id = 1;
 function nextId() {
@@ -22,6 +23,7 @@ class Gravity {
     useA;
 
     bordered;
+    randomDirection;
 
     constructor() {
         this.planets = [];
@@ -30,7 +32,11 @@ class Gravity {
     }
 
     addPlanet(event) {
-        const planet = new Planet(new Coordinate(event.clientX, -event.clientY), this.getRandomColor());
+        const planet = new Planet(
+            new Coordinate(event.clientX, -event.clientY), 
+            this.getRandomColor(), 
+            this.randomDirection
+        );
         this.planets.push(planet);
         this.addDomElement(planet);
     }
@@ -46,6 +52,7 @@ class Gravity {
             element.clientHeight, element.clientWidth
         );
         this.bordered = element.classList.contains('bordered');
+        this.randomDirection = false;
         this.element.addEventListener('click', (event) => {this.addPlanet(event);});
     }
 
@@ -133,6 +140,10 @@ class Gravity {
             this.element.clientHeight, this.element.clientWidth
         );
     }
+
+    toggleRandomDirection() {
+        this.randomDirection = !this.randomDirection;
+    }
 }
 
 
@@ -146,12 +157,12 @@ class Planet {
     velocity;
     resultantForce;
 
-    constructor(position, color) {
+    constructor(position, color, randomDirection) {
         this.id = nextId();
         this.position = position;
         this.radius = 5;
         this.color = color;
-        this.velocity = new Velocity(0, 0);
+        this.velocity = randomDirection ? this.getRandomVelocity() : new Velocity(0, 0);
         this.resultantForce = new Vector(0, 0);
     }
 
@@ -198,7 +209,6 @@ class Planet {
     }
 
     bounce(height, width) {
-        console.log(this.position, height, width);
         if (this.position.x > width) {
             this.velocity.x *= -1;
         }
@@ -215,6 +225,13 @@ class Planet {
 
     setDiv(divElement) {
         this.div = divElement;
+    }
+
+    getRandomVelocity() {
+        return new Velocity(
+            (Math.random() - 0.5) * MAX_STARTING_VELOCITY,
+            (Math.random() - 0.5) * MAX_STARTING_VELOCITY
+        )
     }
 }
 
@@ -272,6 +289,7 @@ window.addEventListener('load', () => {
     document.getElementById('reset').addEventListener('click', () => {reset()});
     document.getElementById('add-border').addEventListener('click', () => {addBorder();})
     document.getElementById('remove-border').addEventListener('click', () => {removeBorder();})
+    document.getElementById('random-direction').addEventListener('change', () => {toggleRandomDirection();})
 });
 
 window.addEventListener('resize', () => {
@@ -298,7 +316,6 @@ function reset() {
 
 function addBorder() {
     gravity.addBorder();
-    console.log('addborder');
     document.getElementById('add-border').classList.add('hidden');
     document.getElementById('remove-border').classList.remove('hidden');
     document.getElementById('gravity').classList.add('bordered');
@@ -311,5 +328,9 @@ function removeBorder() {
     document.getElementById('gravity').classList.remove('bordered');
 }
 
+function toggleRandomDirection() {
+    console.log('Changed');
+    gravity.toggleRandomDirection();
+}
 
 const gravity = new Gravity();
