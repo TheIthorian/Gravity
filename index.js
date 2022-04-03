@@ -106,6 +106,7 @@ class Gravity {
     reset() {
         this.planets = [];
         this.element.innerHTML = "";
+        clearInterval(this.sim);
         this.startSim();
     }
 
