@@ -24,6 +24,7 @@ class Gravity {
 
     bordered;
     randomDirection;
+    gravity;
 
     constructor() {
         this.planets = [];
@@ -53,6 +54,7 @@ class Gravity {
         );
         this.bordered = element.classList.contains('bordered');
         this.randomDirection = false;
+        this.gravity = true;
         this.element.addEventListener('click', (event) => {this.addPlanet(event);});
     }
 
@@ -73,7 +75,7 @@ class Gravity {
     step() {
         for (let i = 0; i < this.planets.length; i++) {
             const planet = this.planets[i];
-            planet.calculateForce(this.planets)
+            planet.calculateForce(this.planets, this.gravity)
                 .then(planet.step({
                     bordered: this.bordered, 
                     height: this.height, 
@@ -81,6 +83,8 @@ class Gravity {
                 }))
                 .then(this.updatePlanetPositions());
         }
+
+        this.updatePlanetPositions();
     }
 
     updatePlanetPositions() {
@@ -144,6 +148,10 @@ class Gravity {
     toggleRandomDirection() {
         this.randomDirection = !this.randomDirection;
     }
+
+    toggleGravity() {
+        this.gravity = !this.gravity;
+    }
 }
 
 
@@ -166,33 +174,37 @@ class Planet {
         this.resultantForce = new Vector(0, 0);
     }
 
-    async calculateForce(planets) {
-        const resultantForce = new Vector(0, 0);
-        for (let i = 0; i < planets.length; i++) {
-            const otherPlanet = planets[i];
-            if (otherPlanet.id != this.id) {
-                let displacement = this.findDisplacement(otherPlanet);
-                let distance2 = Math.max(displacement.mod2(), MIN_DISPLACEMENT ** 2);
-                let unitVector = displacement.findUnitVector();
+    async calculateForce(planets, gravity) {
+        let resultantForce = new Vector(0, 0);
 
-                const force = unitVector.multiply((G * otherPlanet.mass()) / distance2);
-                resultantForce.add(force);
+        if (!gravity) { 
+            this.resultantForce = resultantForce; 
+        } else {
+            for (let i = 0; i < planets.length; i++) {
+                const otherPlanet = planets[i];
+                if (otherPlanet.id != this.id) {
+                    const displacement = this.findDisplacement(otherPlanet);
+                    const distance2 = Math.max(displacement.mod2(), MIN_DISPLACEMENT ** 2);
+                    const unitVector = displacement.findUnitVector();
+    
+                    const force = unitVector.multiply((G * otherPlanet.mass()) / distance2);
+                    resultantForce = resultantForce.add(force);
+                }
             }
-            
-        }
+        }        
         this.resultantForce = resultantForce;
     }
 
     step({bordered, height, width}){
         const dv = this.resultantForce.multiply(STEP_TIME);
-        this.velocity.add(dv);
+        this.velocity = this.velocity.add(dv);
 
         if (bordered) {
             this.bounce(height, width);
         }
         const dp = this.velocity.multiply(STEP_TIME);
 
-        this.position.add(dp);
+        this.position = this.position.add(dp);
 
         const d = {};
         d.left = this.div.style.left, 
@@ -245,15 +257,16 @@ class Vector {
     }
 
     add(vector) {
-        this.x += vector.x;
-        this.y += vector.y;
-        return this;
+        const x = this.x + vector.x;
+        const y = this.y + vector.y;
+        return new Vector(x, y);
+        
     }
 
     multiply(factor) {
-        this.x *= factor;
-        this.y *= factor;
-        return this;
+        const x = this.x * factor;
+        const y = this.y * factor;
+        return new Vector(x, y);
     }
 
     mod() {
@@ -287,9 +300,10 @@ window.addEventListener('load', () => {
     document.getElementById('pause').addEventListener('click', () => {pause()});
     document.getElementById('start').addEventListener('click', () => {start()});
     document.getElementById('reset').addEventListener('click', () => {reset()});
-    document.getElementById('add-border').addEventListener('click', () => {addBorder();})
-    document.getElementById('remove-border').addEventListener('click', () => {removeBorder();})
-    document.getElementById('random-direction').addEventListener('change', () => {toggleRandomDirection();})
+    document.getElementById('add-border').addEventListener('click', () => {addBorder()});
+    document.getElementById('remove-border').addEventListener('click', () => {removeBorder()});
+    document.getElementById('random-direction').addEventListener('change', () => {toggleRandomDirection()});
+    document.getElementById('disable-gravity').addEventListener('change', () => {toggleGravity()});
 });
 
 window.addEventListener('resize', () => {
@@ -329,8 +343,11 @@ function removeBorder() {
 }
 
 function toggleRandomDirection() {
-    console.log('Changed');
     gravity.toggleRandomDirection();
+}
+
+function toggleGravity() {
+    gravity.toggleGravity();
 }
 
 const gravity = new Gravity();
