@@ -21,6 +21,8 @@ class Gravity {
     colorsB;
     useA;
 
+    bordered;
+
     constructor() {
         this.planets = [];
         this.initColors();
@@ -43,6 +45,7 @@ class Gravity {
         this.setDimensions(
             element.clientHeight, element.clientWidth
         );
+        this.bordered = element.classList.contains('bordered');
         this.element.addEventListener('click', (event) => {this.addPlanet(event);});
     }
 
@@ -64,7 +67,11 @@ class Gravity {
         for (let i = 0; i < this.planets.length; i++) {
             const planet = this.planets[i];
             planet.calculateForce(this.planets)
-                .then(planet.step())
+                .then(planet.step({
+                    bordered: this.bordered, 
+                    height: this.height, 
+                    width: this.width
+                }))
                 .then(this.updatePlanetPositions());
         }
     }
@@ -112,6 +119,20 @@ class Gravity {
         if (this.colorsB.length == 0) {this.useA = true;}
         return color;
     }
+
+    addBorder() {
+        this.bordered = true;
+    }
+
+    removeBorder() {
+        this.bordered = false;
+    }
+
+    resize() {
+        this.setDimensions(
+            this.element.clientHeight, this.element.clientWidth
+        );
+    }
 }
 
 
@@ -151,11 +172,15 @@ class Planet {
         this.resultantForce = resultantForce;
     }
 
-    step(){
+    step({bordered, height, width}){
         const dv = this.resultantForce.multiply(STEP_TIME);
         this.velocity.add(dv);
 
-        const dp = this.velocity.multiply(STEP_TIME)
+        if (bordered) {
+            this.bounce(height, width);
+        }
+        const dp = this.velocity.multiply(STEP_TIME);
+
         this.position.add(dp);
 
         const d = {};
@@ -170,6 +195,22 @@ class Planet {
     findDisplacement(otherPlanet) {
         const displacement = this.position.findDisplacement(otherPlanet.position);
         return displacement;
+    }
+
+    bounce(height, width) {
+        console.log(this.position, height, width);
+        if (this.position.x > width) {
+            this.velocity.x *= -1;
+        }
+        if (this.position.x < 0) {
+            this.velocity.x *= -1;
+        }
+        if (this.position.y <-height) {
+            this.velocity.y *= -1;
+        }
+        if (this.position.y > 0) {
+            this.velocity.y *= -1;
+        }
     }
 
     setDiv(divElement) {
@@ -228,7 +269,13 @@ window.addEventListener('load', () => {
     gravity.setElement(document.getElementById('gravity'));
     document.getElementById('pause').addEventListener('click', () => {pause()});
     document.getElementById('start').addEventListener('click', () => {start()});
-    document.getElementById('reset').addEventListener('click', () => {reset()})
+    document.getElementById('reset').addEventListener('click', () => {reset()});
+    document.getElementById('add-border').addEventListener('click', () => {addBorder();})
+    document.getElementById('remove-border').addEventListener('click', () => {removeBorder();})
+});
+
+window.addEventListener('resize', () => {
+    gravity.resize();
 });
 
 function pause() {
@@ -240,12 +287,28 @@ function pause() {
 function start() {
     gravity.startSim();
     document.getElementById('pause').classList.remove('hidden');
-    document.getElementById('start').classList.add('hidden');}
+    document.getElementById('start').classList.add('hidden');
+}
 
 function reset() {
     gravity.reset();
     document.getElementById('pause').classList.remove('hidden');
     document.getElementById('start').classList.add('hidden');
+}
+
+function addBorder() {
+    gravity.addBorder();
+    console.log('addborder');
+    document.getElementById('add-border').classList.add('hidden');
+    document.getElementById('remove-border').classList.remove('hidden');
+    document.getElementById('gravity').classList.add('bordered');
+}
+
+function removeBorder() {
+    gravity.removeBorder();
+    document.getElementById('add-border').classList.remove('hidden');
+    document.getElementById('remove-border').classList.add('hidden');
+    document.getElementById('gravity').classList.remove('bordered');
 }
 
 
