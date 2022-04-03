@@ -1,4 +1,4 @@
-const COLORS = [];
+const COLORS = ['#ffffff', '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0000ff'];
 const G = 1;
 const MIN_DISPLACEMENT = 100;
 const STEP_TIME = 1;
@@ -17,13 +17,18 @@ class Gravity {
     planets;
     sim;
 
+    colorsA;
+    colorsB;
+    useA;
+
     constructor() {
         this.planets = [];
+        this.initColors();
         this.sim = setInterval(() => {this.step()}, INTERVAL);
     }
 
     addPlanet(event) {
-        const planet = new Planet(new Coordinate(event.clientX, -event.clientY));
+        const planet = new Planet(new Coordinate(event.clientX, -event.clientY), this.getRandomColor());
         this.planets.push(planet);
         this.addDomElement(planet);
     }
@@ -88,6 +93,27 @@ class Gravity {
         this.element.innerHTML = "";
     }
 
+    initColors() {
+        this.colorsA = COLORS.map(x => x);
+        this.colorsB = [];
+        this.useA = true;
+    }
+
+    getRandomColor() {
+        const fn = (a, b) => {
+            const i = Math.floor(Math.random() * a.length);
+            const color = a.splice(i, 1);
+            b.push(color);
+            return color;
+        }
+        const color = this.useA 
+            ? fn(this.colorsA, this.colorsB) 
+            : fn(this.colorsB, this.colorsA);
+
+        if (this.colorsA.length == 0) {this.useA = false;}
+        if (this.colorsB.length == 0) {this.useA = true;}
+        return color;
+    }
 }
 
 
@@ -101,11 +127,11 @@ class Planet {
     velocity;
     resultantForce;
 
-    constructor(position) {
+    constructor(position, color) {
         this.id = nextId();
         this.position = position;
         this.radius = 5;
-        this.color = '#ffffff';
+        this.color = color;
         this.velocity = new Velocity(0, 0);
         this.resultantForce = new Vector(0, 0);
     }
