@@ -222,7 +222,7 @@ class Planet {
                 const isInBounds = this.isWithinBounds(height, width)
                 if (otherPlanet.id != this.id && isOtherInBounds && isInBounds) {
                     const displacement = this.findDisplacement(otherPlanet);
-                    const distance2 = Math.max(displacement.mod2(), MIN_DISPLACEMENT ** 2);
+                    const distance2 = Math.max(displacement.mod2(), MIN_DISPLACEMENT);
                     const unitVector = displacement.findUnitVector();
     
                     const force = unitVector.multiply((G * otherPlanet.mass()) / distance2);
