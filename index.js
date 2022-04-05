@@ -1,4 +1,4 @@
-const COLORS = ['#ffffff', '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0000ff'];
+const COLORS = ['#ffffff', '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0dcfff'];
 
 const G = 1; // Gravitaional constant
 const MIN_DISPLACEMENT = 100;
@@ -135,12 +135,8 @@ class Gravity {
         return color;
     }
 
-    addBorder() {
-        this.bordered = true;
-    }
-
-    removeBorder() {
-        this.bordered = false;
+    toggleBorder() {
+        this.bordered = !this.bordered;
     }
 
     resize() {
@@ -304,10 +300,12 @@ window.addEventListener('load', () => {
     document.getElementById('pause').addEventListener('click', () => {pause()});
     document.getElementById('start').addEventListener('click', () => {start()});
     document.getElementById('reset').addEventListener('click', () => {reset()});
-    document.getElementById('add-border').addEventListener('click', () => {addBorder()});
-    document.getElementById('remove-border').addEventListener('click', () => {removeBorder()});
+    
+    // Additional options
+    document.getElementById('use-border').addEventListener('change', () => {toggleBorder()});
     document.getElementById('random-direction').addEventListener('change', () => {toggleRandomDirection()});
     document.getElementById('disable-gravity').addEventListener('change', () => {toggleGravity()});
+    document.getElementById('toggle-additional-options').addEventListener('click', (e) => {toggleDisplayAdditionalOptions(e)});
 });
 
 window.addEventListener('resize', () => {
@@ -332,18 +330,12 @@ function reset() {
     document.getElementById('start').classList.add('hidden');
 }
 
-function addBorder() {
-    gravity.addBorder();
-    document.getElementById('add-border').classList.add('hidden');
-    document.getElementById('remove-border').classList.remove('hidden');
-    document.getElementById('gravity').classList.add('bordered');
-}
 
-function removeBorder() {
-    gravity.removeBorder();
-    document.getElementById('add-border').classList.remove('hidden');
-    document.getElementById('remove-border').classList.add('hidden');
-    document.getElementById('gravity').classList.remove('bordered');
+// Additional options
+
+function toggleBorder() {
+    gravity.toggleBorder();
+    document.getElementById('gravity').classList.toggle('bordered');
 }
 
 function toggleRandomDirection() {
@@ -352,6 +344,12 @@ function toggleRandomDirection() {
 
 function toggleGravity() {
     gravity.toggleGravity();
+}
+
+function toggleDisplayAdditionalOptions(event) {
+    document.getElementById('additional-options').classList.toggle('hidden');
+    event.target.value = event.target.value == 'hide' ? 'show' : 'hide';
+    event.target.innerHTML = event.target.value == 'hide' ? 'Hide additional options' : 'Show additional options';    
 }
 
 const gravity = new Gravity();

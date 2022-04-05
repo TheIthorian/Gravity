@@ -14,18 +14,27 @@
             <button id="pause">Pause</button>
             <button id="start" class="hidden">Start</button>
             <button id="reset">Reset</button>
-
-            <button id="add-border">Use border</button>
-            <button id="remove-border" class="hidden">Remove border</button>
-            <div class="input-group">
-                <label for="random-direction">Random Direction?</label>
-                <input id='random-direction' name='random-direction' type="checkbox" value="false">
-            </div>
-            <div class="input-group">
-                <label for="disable-gravity">Disable Gravity?</label>
-                <input id='disable-gravity' name='disable-gravity' type="checkbox" value="false">
+            
+            <div class="additional-options-container">
+                <button id="toggle-additional-options" class="tirtiary" value="show">Show additional options</button>
+                <div id="additional-options" class="hidden">
+                    <div class="input-group">
+                        <label for="random-direction">Random Direction?</label>
+                        <input id='random-direction' name='random-direction' type="checkbox" value="false">
+                    </div>
+                    <div class="input-group">
+                        <label for="disable-gravity">Disable Gravity?</label>
+                        <input id='disable-gravity' name='disable-gravity' type="checkbox" value="false">
+                    </div>
+                    <div class="input-group">
+                        <label for="use-border">Use Border?</label>
+                        <input id='use-border' name='use-border' type="checkbox" value="false">
+                    </div>
+                </div>
             </div>
         </div>
-        <div id="gravity"></div>
+        <div id="gravity">
+            <!-- <svg width="958" height="959"><line x1="350.6709621441267" x2="425.5330879373805" y1="244.91835061745712" y2="312.8242611821359" stroke="black"></line></svg> -->
+        </div>
     </body>
 </html>

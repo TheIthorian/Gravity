@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 html {
     height: 100%;
     width: 100%;
     overflow: hidden;
+    font-family: 'Roboto', sans-serif;
 }
 
 body {
@@ -11,6 +14,10 @@ body {
     padding: 0px;
     background-color: rgb(241, 31, 31);
     overflow: hidden;
+}
+
+.hidden {
+    display: none;
 }
 
 #gravity {
@@ -35,31 +42,49 @@ body {
     z-index: 10;
     position: absolute;
     max-width: 100vw;
-    align-items: center;
+    width: 100vw;
+    align-items: top;
 }
 
-button {
+.button-container > button {
     padding: 5px;
     margin: 5px;
     min-width: 50px;
-    min-height: 30px;
+    height: 30px;
     border: 0px;
     border-radius: 2px;
     background-color: aqua;
     cursor: pointer;
 }
 
-button.hidden {
-    display: none;
+.button-container > .additional-options-container {
+    margin-left: auto;
+    justify-content: left;
+    align-items: left;
+    width: 200px;
+}
+
+
+button.tirtiary {
+    border: none;
+    background: none;
+    color: aqua;
+    margin: 0;
+    text-decoration: underline;
 }
 
 .input-group {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
     margin: 5px;
 }
 
 label {
     color: #ffffff;
+}
+
+svg {
+    z-index: 5;
 }
