@@ -18,6 +18,7 @@ class Gravity {
     height;
     width;
     element;
+    annotationElm;
     planets;
     sim;
 
@@ -43,6 +44,7 @@ class Gravity {
         );
         this.planets.push(planet);
         this.addDomElement(planet);
+        planet.addAnnotation(this.planets, this.annotationElm);
     }
 
     setDimensions(height, width) {
@@ -55,6 +57,8 @@ class Gravity {
         this.setDimensions(
             element.clientHeight, element.clientWidth
         );
+        this._initAnnotations(element);
+
         this.bordered = element.classList.contains('bordered');
         this.randomDirection = false;
         this.gravity = true;
@@ -88,6 +92,7 @@ class Gravity {
         }
 
         this.updatePlanetPositions();
+        this.updateLines();
     }
 
     updatePlanetPositions() {
@@ -119,6 +124,14 @@ class Gravity {
         this.useA = true;
     }
 
+    _initAnnotations(element) {
+        const annotationElm = document.getElementById('annotation');
+        annotationElm.setAttributeNS(null, 'width', this.width);
+        annotationElm.setAttributeNS(null, 'height', this.height);
+        annotationElm.setAttributeNS(null, 'viewBox', `0 0 ${this.width} ${this.height}`);
+        this.annotationElm = annotationElm;
+    }
+
     getRandomColor() {
         const fn = (a, b) => {
             const i = Math.floor(Math.random() * a.length);
@@ -143,6 +156,9 @@ class Gravity {
         this.setDimensions(
             this.element.clientHeight, this.element.clientWidth
         );
+        this.annotationElm.setAttributeNS(null, 'width', this.width);
+        this.annotationElm.setAttributeNS(null, 'height', this.height);
+        this.annotationElm.setAttributeNS(null, 'viewBox', `0 0 ${this.width} ${this.height}`);
     }
 
     toggleRandomDirection() {
@@ -153,42 +169,50 @@ class Gravity {
         this.gravity = !this.gravity;
     }
 
-    drawLines() {
-        
+    updateLines() {      
         for (let i = 0; i < this.planets.length; i++) {
             const planet = this.planets[i];
 
             for (let j = 0; j < this.planets.length; j++) {
-                if (j === i) {
-                    continue;
-                }
+                if (j >= i) continue;
                 const otherPlanet = this.planets[j];
-
-                //  Should use the same line and then change the position to animate
-                const existingSvgs = this.element.getElementsByTagName('svg');
-                for (let index = existingSvgs.length - 1; index >= 0; index--) {
-                    existingSvgs[index].parentNode.removeChild(existingSvgs[index]);
-                }
-
-                const svg = document.createElement('svg');
-                svg.setAttribute('width', this.width);
-                svg.setAttribute('height', this.height);
-
-                const line = document.createElement('line');
-                line.setAttribute('x1', planet.position.x);
-                line.setAttribute('x2', otherPlanet.position.x);
-                line.setAttribute('y1', -planet.position.y);
-                line.setAttribute('y2', -otherPlanet.position.y);
-                line.setAttribute('stroke', 'white');
-
-                svg.appendChild(line);
-                this.element.appendChild(svg);
+                planet.updateLineToPlanet(otherPlanet);
             }
             
         }
     }
 }
 
+// Move to own class
+
+function addSvgLine(x1, x2, y1, y2, svgElement) {
+    //  Should use the same line and then change the position to animate
+    const line = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+    line.setAttributeNS(null, 'x1', x1);
+    line.setAttributeNS(null, 'x2', x2);
+    line.setAttributeNS(null, 'y1', -y1);
+    line.setAttributeNS(null, 'y2', -y2);
+    line.setAttributeNS(null, 'stroke-width', '2');
+    line.setAttributeNS(null, 'stroke', 'white');
+
+    svgElement.appendChild(line);
+    return line;
+}
+
+function addSvgLineFromVectors(p1, p2, svgElement) {
+    return addSvgLine(p1.x, p2.x, p1.y, p2.y, svgElement);
+}
+
+function updateSvgLine(x1, x2, y1, y2, lineElement) {
+    lineElement.setAttributeNS(null, 'x1', x1);
+    lineElement.setAttributeNS(null, 'x2', x2);
+    lineElement.setAttributeNS(null, 'y1', -y1);
+    lineElement.setAttributeNS(null, 'y2', -y2);
+}
+
+function updateSvgLineFromVectors(p1, p2, lineElement) {
+    updateSvgLine(p1.x, p2.x, p1.y, p2.y, lineElement)
+}
 
 
 class Planet {
@@ -201,6 +225,8 @@ class Planet {
     velocity;
     resultantForce;
 
+    lines;
+
     constructor(position, color, randomDirection) {
         this.id = nextId();
         this.position = position;
@@ -208,6 +234,7 @@ class Planet {
         this.color = color;
         this.velocity = randomDirection ? this.getRandomVelocity() : new Velocity(0, 0);
         this.resultantForce = new Vector(0, 0);
+        this.lines = {};
     }
 
     async calculateForce(planets, gravity, {height, width}) {
@@ -290,6 +317,24 @@ class Planet {
             (Math.random() - 0.5) * MAX_STARTING_VELOCITY,
             (Math.random() - 0.5) * MAX_STARTING_VELOCITY
         )
+    }
+
+    addAnnotation(planetList, svgElement) {
+        for (let i = 0; i < planetList.length; i++) {
+            const planet = planetList[i];
+            if (planet.id != this.id) {
+                this.lines[planet.id] = this.addLineToOtherPlanet(planet, svgElement);
+            }
+        }
+    }
+
+    addLineToOtherPlanet(planet, svgElement) {
+        return addSvgLineFromVectors(this.position, planet.position, svgElement);
+    }
+
+    updateLineToPlanet(planet) {
+        const line = this.lines[planet.id];
+        updateSvgLineFromVectors(this.position, planet.position, line);
     }
 }
 
