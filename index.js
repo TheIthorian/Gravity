@@ -1,7 +1,7 @@
 const COLORS = ['#ffffff', '#ff0000', '#ffff00', '#ff00ff', '#00ff00', '#0dcfff'];
 
 const G = 1; // Gravitaional constant
-const MIN_DISPLACEMENT = 100;
+const MIN_DISPLACEMENT = 100 ** 2;
 const MAX_STARTING_VELOCITY = 3;
 const BORDER_WIDTH = 10;
 
@@ -78,7 +78,7 @@ class Gravity {
     step() {
         for (let i = 0; i < this.planets.length; i++) {
             const planet = this.planets[i];
-            planet.calculateForce(this.planets, this.gravity)
+            planet.calculateForce(this.planets, this.gravity, {height: this.height, width: this.width})
                 .then(planet.step({
                     bordered: this.bordered, 
                     height: this.height, 
@@ -152,7 +152,43 @@ class Gravity {
     toggleGravity() {
         this.gravity = !this.gravity;
     }
+
+    drawLines() {
+        
+        for (let i = 0; i < this.planets.length; i++) {
+            const planet = this.planets[i];
+
+            for (let j = 0; j < this.planets.length; j++) {
+                if (j === i) {
+                    continue;
+                }
+                const otherPlanet = this.planets[j];
+
+                //  Should use the same line and then change the position to animate
+                const existingSvgs = this.element.getElementsByTagName('svg');
+                for (let index = existingSvgs.length - 1; index >= 0; index--) {
+                    existingSvgs[index].parentNode.removeChild(existingSvgs[index]);
+                }
+
+                const svg = document.createElement('svg');
+                svg.setAttribute('width', this.width);
+                svg.setAttribute('height', this.height);
+
+                const line = document.createElement('line');
+                line.setAttribute('x1', planet.position.x);
+                line.setAttribute('x2', otherPlanet.position.x);
+                line.setAttribute('y1', -planet.position.y);
+                line.setAttribute('y2', -otherPlanet.position.y);
+                line.setAttribute('stroke', 'white');
+
+                svg.appendChild(line);
+                this.element.appendChild(svg);
+            }
+            
+        }
+    }
 }
+
 
 
 class Planet {
@@ -174,7 +210,7 @@ class Planet {
         this.resultantForce = new Vector(0, 0);
     }
 
-    async calculateForce(planets, gravity) {
+    async calculateForce(planets, gravity, {height, width}) {
         let resultantForce = new Vector(0, 0);
 
         if (!gravity) { 
@@ -182,7 +218,9 @@ class Planet {
         } else {
             for (let i = 0; i < planets.length; i++) {
                 const otherPlanet = planets[i];
-                if (otherPlanet.id != this.id) {
+                const isOtherInBounds = otherPlanet.isWithinBounds(height, width);
+                const isInBounds = this.isWithinBounds(height, width)
+                if (otherPlanet.id != this.id && isOtherInBounds && isInBounds) {
                     const displacement = this.findDisplacement(otherPlanet);
                     const distance2 = Math.max(displacement.mod2(), MIN_DISPLACEMENT ** 2);
                     const unitVector = displacement.findUnitVector();
@@ -222,21 +260,29 @@ class Planet {
 
     bounce(height, width) {
         if (this.position.x > width - BORDER_WIDTH) {
-            this.velocity.x *= -1;
+            this.velocity.x *= -0.95;
         }
         if (this.position.x < 0 - BORDER_WIDTH) {
-            this.velocity.x *= -1;
+            this.velocity.x *= -0.95;
         }
         if (this.position.y < -height + BORDER_WIDTH) {
-            this.velocity.y *= -1;
+            this.velocity.y *= -0.95;
         }
         if (this.position.y > 0 + BORDER_WIDTH) {
-            this.velocity.y *= -1;
+            this.velocity.y *= -0.95;
         }
+    }
+
+    isWithinBounds(height, width) {
+        return this.position.x < width - BORDER_WIDTH 
+            && this.position.x > 0 + BORDER_WIDTH 
+            && this.position.y > -height + BORDER_WIDTH 
+            && this.position.y < 0 - BORDER_WIDTH;
     }
 
     setDiv(divElement) {
         this.div = divElement;
+        this.div.id = this.id;
     }
 
     getRandomVelocity() {
@@ -246,6 +292,8 @@ class Planet {
         )
     }
 }
+
+
 
 class Vector {
     x;
