@@ -46,6 +46,11 @@ body {
     align-items: top;
 }
 
+button {
+    cursor: pointer;
+    background-color: aqua;
+}
+
 .button-container > button {
     padding: 5px;
     margin: 5px;
@@ -53,8 +58,6 @@ body {
     height: 30px;
     border: 0px;
     border-radius: 2px;
-    background-color: aqua;
-    cursor: pointer;
 }
 
 .button-container > .additional-options-container {

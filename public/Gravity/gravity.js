@@ -139,6 +139,7 @@ export default class Gravity {
 
     toggleBorder() {
         this.bordered = !this.bordered;
+        this.element.classList.toggle('bordered');
     }
 
     resize() {
