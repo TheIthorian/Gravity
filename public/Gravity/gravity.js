@@ -20,7 +20,6 @@ export default class Gravity {
     constructor() {
         this.planets = [];
         this.colorHandler = new ColorHandler(COLORS);
-        this.sim = setInterval(() => {this.step()}, INTERVAL);
     }
 
     addPlanet(event) {
@@ -32,6 +31,10 @@ export default class Gravity {
         this.planets.push(planet);
         this.addDomElement(planet);
         planet.addAnnotation(this.planets, this.annotationElm);
+
+        if (this.planets.length == 1) {
+            this.sim = setInterval(() => {this.step()}, INTERVAL);
+        }
     }
 
     setDimensions(height, width) {
