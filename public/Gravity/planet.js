@@ -33,7 +33,7 @@ export default class Planet {
         this.lines = {};
     }
 
-    async calculateForce(planets, gravity, {height, width}) {
+    calculateForce(planets, gravity, {height, width}) {
         let resultantForce = new Force(0, 0);
 
         if (!gravity) { 
@@ -115,11 +115,13 @@ export default class Planet {
         )
     }
 
-    addAnnotation(planetList, svgElement) {
+    addAnnotation(planetList, svgElement, drawLinesBetweenPlanets) {
         for (let i = 0; i < planetList.length; i++) {
             const planet = planetList[i];
             if (planet.id != this.id) {
-                this.lines[planet.id] = this.addLineToOtherPlanet(planet, svgElement);
+                const line = this.addLineToOtherPlanet(planet, svgElement);
+                line.style.display = drawLinesBetweenPlanets ? null : 'none';
+                this.lines[planet.id] = line;
             }
         }
     }

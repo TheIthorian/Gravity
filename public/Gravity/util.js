@@ -35,7 +35,7 @@ class ColorHandler {
         // are used before repeating
         if (this._colorsA.length == 0) {this._useA = false;}
         if (this._colorsB.length == 0) {this._useA = true;}
-        return color;
+        return color ?? '#ffffff';
     }
 }
 

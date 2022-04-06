@@ -24,22 +24,30 @@
                 <button id="toggle-additional-options" class="tirtiary" value="show">Show additional options</button>
                 <div id="additional-options" class="hidden">
                     <div class="input-group">
-                        <label for="random-direction">Random Direction?</label>
-                        <input id='random-direction' name='random-direction' type="checkbox" value="false">
+                        <label for="use-border">Use Border?</label>
+                        <input id='use-border' name='use-border' type="checkbox">
                     </div>
                     <div class="input-group">
                         <label for="disable-gravity">Disable Gravity?</label>
-                        <input id='disable-gravity' name='disable-gravity' type="checkbox" value="false">
+                        <input id='disable-gravity' name='disable-gravity' type="checkbox">
                     </div>
                     <div class="input-group">
-                        <label for="use-border">Use Border?</label>
-                        <input id='use-border' name='use-border' type="checkbox" value="false">
+                        <label for="random-direction">Random Direction?</label>
+                        <input id='random-direction' name='random-direction' type="checkbox">
+                    </div>
+                    <div class="input-group">
+                        <label for="enable-draw-annotations">Enable Annotations?</label>
+                        <input id='enable-draw-annotations' name='enable-draw-annotations' type="checkbox" checked>
+                    </div>
+                    <div class="input-group">
+                        <label for="enable-draw-lines-between-planets">Enable Lines Between Planets?</label>
+                        <input id='enable-draw-lines-between-planets' name='enable-draw-lines-between-planets' type="checkbox">
                     </div>
                 </div>
             </div>
         </div>
         <div id="gravity">
-            <svg id='annotation' xmlns="http://www.w3.org/2000/svg"></svg>
+            <svg></svg>
         </div>
     </body>
 </html>

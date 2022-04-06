@@ -1,7 +1,9 @@
 const OPTIONS = [
     {id: 'use-border', action: 'toggleBorder'},
+    {id: 'disable-gravity', action: 'toggleGravity'},
     {id: 'random-direction', action: 'toggleRandomDirection'},
-    {id: 'disable-gravity', action: 'toggleGravity'}
+    {id: 'enable-draw-annotations', action: 'toggleAnnotations'},
+    {id: 'enable-draw-lines-between-planets', action: 'toggleLinesBetweenPlanets'}
 ]
 
 export default function UI(gravity) {
