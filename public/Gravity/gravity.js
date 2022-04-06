@@ -1,6 +1,7 @@
 import Planet from './planet.js';
 import { Coordinate } from './vector.js';
 import { INTERVAL, COLORS } from './constants.js';
+import { ColorHandler } from './util.js';
 
 export default class Gravity {
     height;
@@ -10,9 +11,7 @@ export default class Gravity {
     planets;
     sim;
 
-    colorsA;
-    colorsB;
-    useA;
+    colorHandler;
 
     bordered;
     randomDirection;
@@ -20,14 +19,14 @@ export default class Gravity {
 
     constructor() {
         this.planets = [];
-        this.initColors();
+        this.colorHandler = new ColorHandler(COLORS);
         this.sim = setInterval(() => {this.step()}, INTERVAL);
     }
 
     addPlanet(event) {
         const planet = new Planet(
             new Coordinate(event.clientX, -event.clientY), 
-            this.getRandomColor(), 
+            this.colorHandler.getRandomColor(), 
             this.randomDirection
         );
         this.planets.push(planet);
@@ -106,35 +105,12 @@ export default class Gravity {
         this.startSim();
     }
 
-    initColors() {
-        this.colorsA = COLORS.map(x => x);
-        this.colorsB = [];
-        this.useA = true;
-    }
-
     _initAnnotations(element) {
         const annotationElm = document.getElementById('annotation');
         annotationElm.setAttributeNS(null, 'width', this.width);
         annotationElm.setAttributeNS(null, 'height', this.height);
         annotationElm.setAttributeNS(null, 'viewBox', `0 0 ${this.width} ${this.height}`);
         this.annotationElm = annotationElm;
-    }
-
-    // Moved to util
-    getRandomColor() {
-        const fn = (a, b) => {
-            const i = Math.floor(Math.random() * a.length);
-            const color = a.splice(i, 1);
-            b.push(color);
-            return color;
-        }
-        const color = this.useA 
-            ? fn(this.colorsA, this.colorsB) 
-            : fn(this.colorsB, this.colorsA);
-
-        if (this.colorsA.length == 0) {this.useA = false;}
-        if (this.colorsB.length == 0) {this.useA = true;}
-        return color;
     }
 
     toggleBorder() {

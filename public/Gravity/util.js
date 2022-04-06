@@ -14,7 +14,13 @@ class ColorHandler {
         return this._colorsA.concat(this._colorsB);
     }
 
-    randomColor() {
+    set colorList(colorList) {
+        this._colorsA = colorList.map(x => x);
+        this._colorsB = [];
+        this._useA = true;
+    }
+
+    getRandomColor() {
         const fn = (a, b) => {
             const i = Math.floor(Math.random() * a.length);
             const color = a.splice(i, 1);
@@ -25,6 +31,8 @@ class ColorHandler {
             ? fn(this._colorsA, this._colorsB) 
             : fn(this._colorsB, this._colorsA);
 
+        // Swap between the two color arrays so all the colors
+        // are used before repeating
         if (this._colorsA.length == 0) {this._useA = false;}
         if (this._colorsB.length == 0) {this._useA = true;}
         return color;
