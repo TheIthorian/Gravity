@@ -91,7 +91,7 @@ export default class Gravity {
         planet.addAnnotation(this.planets, this.annotationElm, this.drawLinesBetweenPlanets);
 
         if (this.planets.length == 1) {
-            this.sim = setInterval(() => {this.step()}, INTERVAL);
+            this.startSim();
         }
     }
 
@@ -175,14 +175,16 @@ export default class Gravity {
 
     // Instance controls 
     pauseSim() { clearInterval(this.sim); }
-    startSim() { if(!this.sim) this.sim = setInterval(() => {this.step()}, INTERVAL); }
+    startSim() {
+        clearInterval(this.sim);
+        this.sim = setInterval(() => {this.step()}, INTERVAL); 
+    }
 
     reset() {
         this.planets.forEach(planet => {
             this.element.removeChild(planet.div);
         });
         this.planets = [];
-        clearInterval(this.sim);
         this._initAnnotations(this.element);
         this.startSim();
     }
