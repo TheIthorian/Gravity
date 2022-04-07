@@ -1,6 +1,6 @@
 import Planet from './planet.js';
 import { Coordinate } from './vector.js';
-import { INTERVAL, COLORS } from './constants.js';
+import { INTERVAL } from './constants.js';
 import { ColorHandler } from './util.js';
 
 export default class Gravity {
@@ -15,24 +15,24 @@ export default class Gravity {
 
     // config
     //   simulation
-    bordered;
-    gravity;
+    bordered = false;
+    gravity = true;
 
     //   annotations
-    drawAnnotations;
-    drawLinesBetweenPlanets;
-    lineWidthBetweenPlanets;
-    lineBetweenPlanetsFade;
+    drawAnnotations = true;
+    drawLinesBetweenPlanets = false;
+    lineWidthBetweenPlanets = 2;
+    lineBetweenPlanetsFade = 0;
 
     //   planets
-    randomDirection; // Rename to randomVelocity
-    planetColors;
+    randomDirection = false; // Rename to randomVelocity
+    planetColors = [];
     
 
     constructor(config) {
-        this.planets = [];
-        this.colorHandler = new ColorHandler(COLORS);
         this.config = config;
+        this.planets = [];
+        this.colorHandler = new ColorHandler(this.planetColors);
     }
 
     get dimensions() {
@@ -70,14 +70,14 @@ export default class Gravity {
             planetColors             // Not implemented
         } = config;
         
-        this.enableBorder = !!enableBorder;
-        this.randomDirection = !!enableRandomPlanetDirection;
-        this.gravity = !disableGravity;
-        this.drawAnnotations = !enableDrawAnnotations;
-        this.drawLinesBetweenPlanets = !!enableDrawLinesBetweenPlanets;
-        this.lineWidthBetweenPlanets = lineWidthBetweenPlanets ?? 2;
-        this.lineBetweenPlanetsFade = !!lineBetweenPlanetsFade;
-        this.planetColors = planetColors ?? [];
+        this.enableBorder = enableBorder ?? this.enableBorder;
+        this.randomDirection = enableRandomPlanetDirection ?? this.randomDirection;
+        this.gravity = !disableGravity ?? this.gravity;
+        this.drawAnnotations = enableDrawAnnotations ?? this.drawAnnotations;
+        this.drawLinesBetweenPlanets = enableDrawLinesBetweenPlanets ?? this.drawLinesBetweenPlanets;
+        this.lineWidthBetweenPlanets = lineWidthBetweenPlanets ?? this.lineWidthBetweenPlanets;
+        this.lineBetweenPlanetsFade = lineBetweenPlanetsFade ?? this.lineBetweenPlanetsFade;
+        this.planetColors = planetColors ?? this.planetColors;
     }
 
     addPlanet(event) {

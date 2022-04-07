@@ -5,7 +5,9 @@ class ColorHandler {
     _useA;
 
     constructor(colorList) {
-        this._colorsA = colorList.map(x => x);
+        this._colorsA = colorList && colorList.length 
+            ? colorList.map(x => x)
+            : ['#ffffff'];
         this._colorsB = [];
         this._useA = true;
     }
