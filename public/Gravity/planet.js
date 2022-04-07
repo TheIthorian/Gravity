@@ -82,17 +82,22 @@ export default class Planet {
     }
 
     bounce(height, width) {
-        if (this.position.x > width - BORDER_WIDTH) {
+        const Delta = 2;
+        if (this.position.x + this.radius > width - BORDER_WIDTH) {
             this.velocity.x *= -0.95;
+            this.position.x -= Delta;
         }
-        if (this.position.x < 0 - BORDER_WIDTH) {
+        if (this.position.x + this.radius < 0 + BORDER_WIDTH) {
             this.velocity.x *= -0.95;
+            this.position.x += Delta;
         }
-        if (this.position.y < -height + BORDER_WIDTH) {
+        if (this.position.y - this.radius * 2 < -height + BORDER_WIDTH - this.radius) {
             this.velocity.y *= -0.95;
+            this.position.y += Delta;
         }
-        if (this.position.y > 0 + BORDER_WIDTH) {
+        if (this.position.y > 0 - BORDER_WIDTH + this.radius) {
             this.velocity.y *= -0.95;
+            this.position.y -= Delta;
         }
     }
 
