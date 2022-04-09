@@ -1,3 +1,5 @@
+import { Store } from "./Gravity/store.js";
+
 const OPTIONS = [
     {id: 'use-border', action: 'toggleBorder'},
     {id: 'disable-gravity', action: 'toggleGravity'},
@@ -11,6 +13,8 @@ const OPTIONS = [
     {id: 'min-displacement', action: 'changeMinimumDisplacement'}
 ]
 
+const configStore = new Store('gravityConfig');
+
 export default function UI(gravity) {
     window.addEventListener('load', () => {
         gravity.setElement(document.getElementById('gravity')); // Sets the gravity div
@@ -18,9 +22,24 @@ export default function UI(gravity) {
         // Add event handlers to UI control
         hookControlButtons(gravity);
         hookAdditionalOptions(gravity);
+        setStoredConfigValues();
     });
 
     window.addEventListener('resize', () => { gravity.resize(); });
+}
+
+function setStoredConfigValues() {
+    const config = configStore.getAll();
+    if (!config) return;
+
+    Object.entries(config).forEach(item => {
+        const option = document.getElementById(item[0]);
+        if (option.type === 'checkbox') {
+            option.checked = item[1];
+        } else {
+            option.value = item[1];
+        }
+    })
 }
 
 // Hook up additional option checkboxes to the corresponding gravity function
@@ -32,9 +51,18 @@ function hookAdditionalOptions(gravity) {
     OPTIONS.forEach(option => {
         const fn = option.action;
         const optionElm = document.getElementById(option.id);
-        optionElm.addEventListener('change', (e) => { gravity[fn](e) });
+        optionElm.addEventListener('change', (e) => { 
+            gravity[fn](e);
+            configStore.set(
+                option.id, 
+                e.target.type === 'checkbox' ? e.target.checked : e.target.value
+            );
+            console.log('config', configStore.getAll());
+        });
         if (option.additionalAction) {
-            optionElm.addEventListener('change', (e) => {option.additionalAction(e)});
+            optionElm.addEventListener('change', (e) => {
+                option.additionalAction(e);
+            });
         }
     });
 }

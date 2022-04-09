@@ -75,7 +75,7 @@ export default class Gravity {
             minDisplacement
         } = config;
         
-        this.enableBorder = enableBorder ?? this.enableBorder;
+        this.bordered = enableBorder ?? this.bordered;
         this.randomDirection = enableRandomPlanetDirection ?? this.randomDirection;
         this.gravity = !disableGravity ?? this.gravity;
         this.drawAnnotations = enableDrawAnnotations ?? this.drawAnnotations;
@@ -106,8 +106,10 @@ export default class Gravity {
     setElement(element) {
         this.element = element;
         this.dimensions = { height: element.clientHeight, width: element.clientWidth };
+        this.bordered 
+            ? this.element.classList.add('bordered') 
+            : this.element.classList.remove('bordered');
         this._initAnnotations(element);
-        this.bordered = element.classList.contains('bordered');
         this.element.addEventListener('click', (event) => {this.addPlanet(event);});
     }
 
@@ -250,7 +252,9 @@ export default class Gravity {
 
     toggleBorder() {
         this.bordered = !this.bordered;
-        this.element.classList.toggle('bordered');
+        this.bordered 
+            ? this.element.classList.add('bordered') 
+            : this.element.classList.remove('bordered');
         if(this.bordered) this.removeOuterPlanets();
     }
 
