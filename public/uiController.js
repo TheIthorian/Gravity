@@ -6,7 +6,11 @@ const OPTIONS = [
     {id: 'random-direction', action: 'toggleRandomDirection'},
     {id: 'enable-draw-annotations', action: 'toggleAnnotations', additionalAction: () => {
         ['enable-draw-lines-between-planets-group'].forEach(id => {
-            document.getElementById(id).classList.toggle('hidden');
+            const visible = document.getElementById('enable-draw-annotations').checked;
+            const option = document.getElementById(id);
+            visible 
+                ? option.classList.remove('hidden')
+                : option.classList.add('hidden');
         });
     }},
     {id: 'enable-draw-lines-between-planets', action: 'toggleLinesBetweenPlanets'},
@@ -38,6 +42,13 @@ function setStoredConfigValues() {
             option.checked = item[1];
         } else {
             option.value = item[1];
+        }
+
+        if (option.id === 'enable-draw-annotations') {
+            const optionElm = document.getElementById('enable-draw-lines-between-planets-group');
+            option.checked 
+                ? optionElm.classList.remove('hidden')
+                : optionElm.classList.add('hidden');
         }
     })
 }

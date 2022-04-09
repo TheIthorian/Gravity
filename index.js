@@ -13,3 +13,4 @@ const gravity = new Gravity({
 UI(gravity);
 
 console.log('config', configStore.getAll());
+console.log('config', gravity.config);

@@ -96,7 +96,7 @@ export default class Gravity {
         );
         this.planets.push(planet);
         this.addPlanetToDom(planet);
-        planet.addAnnotation(this.planets, this.annotationElm, this.drawLinesBetweenPlanets);
+        planet.addAnnotation(this.planets, this.annotationElm, this.drawLinesBetweenPlanets && this.drawAnnotations);
 
         if (this.planets.length == 1) {
             this.startSim();
