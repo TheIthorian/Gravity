@@ -3,7 +3,8 @@ const OPTIONS = [
     {id: 'disable-gravity', action: 'toggleGravity'},
     {id: 'random-direction', action: 'toggleRandomDirection'},
     {id: 'enable-draw-annotations', action: 'toggleAnnotations'},
-    {id: 'enable-draw-lines-between-planets', action: 'toggleLinesBetweenPlanets'}
+    {id: 'enable-draw-lines-between-planets', action: 'toggleLinesBetweenPlanets'},
+    {id: 'min-displacement', action: 'changeMinimumDisplacement'}
 ]
 
 export default function UI(gravity) {
@@ -27,7 +28,7 @@ function hookAdditionalOptions(gravity) {
     OPTIONS.forEach(option => {
         const fn = option.action;
         document.getElementById(option.id)
-            .addEventListener('change', () => { gravity[fn]() });
+            .addEventListener('change', (e) => { gravity[fn](e) });
     });
 }
 

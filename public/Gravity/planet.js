@@ -1,4 +1,4 @@
-import { BORDER_WIDTH, G, MAX_STARTING_VELOCITY, MIN_DISPLACEMENT, STEP_TIME } from "./constants.js";
+import { BORDER_WIDTH, G, MAX_STARTING_VELOCITY, STEP_TIME } from "./constants.js";
 import { Velocity, Force } from "./vector.js";
 import {  
     addSvgLineFromVectors,
@@ -33,7 +33,7 @@ export default class Planet {
         this.lines = {};
     }
 
-    calculateForce(planets, gravity, {height, width}) {
+    calculateForce(planets, gravity, {height, width}, MIN_DISPLACEMENT) {
         let resultantForce = new Force(0, 0);
 
         if (!gravity) { 

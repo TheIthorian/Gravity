@@ -3,6 +3,8 @@ import { Coordinate } from './vector.js';
 import { INTERVAL } from './constants.js';
 import { ColorHandler } from './util.js';
 
+
+
 export default class Gravity {
     height;
     width;
@@ -27,6 +29,7 @@ export default class Gravity {
     //   planets
     randomDirection = false; // Rename to randomVelocity
     planetColors = [];
+    MIN_DISPLACEMENT = 50 ** 2;
     
 
     constructor(config) {
@@ -67,7 +70,8 @@ export default class Gravity {
             enableDrawLinesBetweenPlanets,
             lineWidthBetweenPlanets, // Not implemented
             lineBetweenPlanetsFade,  // Not implemented
-            planetColors             // Not implemented
+            planetColors,            // Not implemented
+            minDisplacement
         } = config;
         
         this.enableBorder = enableBorder ?? this.enableBorder;
@@ -78,6 +82,7 @@ export default class Gravity {
         this.lineWidthBetweenPlanets = lineWidthBetweenPlanets ?? this.lineWidthBetweenPlanets;
         this.lineBetweenPlanetsFade = lineBetweenPlanetsFade ?? this.lineBetweenPlanetsFade;
         this.planetColors = planetColors ?? this.planetColors;
+        this.minDisplacement = minDisplacement ?? this.minDisplacement;
     }
 
     addPlanet(event) {
@@ -137,7 +142,12 @@ export default class Gravity {
     step() {
         for (let i = 0; i < this.planets.length; i++) {
             const planet = this.planets[i];
-            planet.calculateForce(this.planets, this.gravity, {...this.dimensions});
+            planet.calculateForce(
+                this.planets, 
+                this.gravity, 
+                {...this.dimensions}, 
+                this.MIN_DISPLACEMENT
+            );
             planet.step({
                 bordered: this.bordered, 
                 height: this.height, 
@@ -226,5 +236,11 @@ export default class Gravity {
                 line.style.display = display;
             }
         });
+    }
+
+    changeMinimumDisplacement(e) {
+        const val = e.target.value;
+        console.log('MIN_DISPLACEMENT: ', val);
+        this.MIN_DISPLACEMENT = val ** 2;
     }
 }
