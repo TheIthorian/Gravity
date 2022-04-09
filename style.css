@@ -45,6 +45,9 @@ body {
     width: 100vw;
     align-items: top;
 }
+.button-container.hidden {
+    display: none;
+}
 
 button {
     cursor: pointer;
@@ -82,6 +85,9 @@ button.tirtiary {
     justify-content: space-between;
     align-items: center;
     margin: 5px;
+}
+.input-group.hidden {
+    display: none;
 }
 
 .vertical {

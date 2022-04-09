@@ -2,7 +2,11 @@ const OPTIONS = [
     {id: 'use-border', action: 'toggleBorder'},
     {id: 'disable-gravity', action: 'toggleGravity'},
     {id: 'random-direction', action: 'toggleRandomDirection'},
-    {id: 'enable-draw-annotations', action: 'toggleAnnotations'},
+    {id: 'enable-draw-annotations', action: 'toggleAnnotations', additionalAction: () => {
+        ['enable-draw-lines-between-planets-group'].forEach(id => {
+            document.getElementById(id).classList.toggle('hidden');
+        });
+    }},
     {id: 'enable-draw-lines-between-planets', action: 'toggleLinesBetweenPlanets'},
     {id: 'min-displacement', action: 'changeMinimumDisplacement'}
 ]
@@ -27,8 +31,11 @@ function hookAdditionalOptions(gravity) {
 
     OPTIONS.forEach(option => {
         const fn = option.action;
-        document.getElementById(option.id)
-            .addEventListener('change', (e) => { gravity[fn](e) });
+        const optionElm = document.getElementById(option.id);
+        optionElm.addEventListener('change', (e) => { gravity[fn](e) });
+        if (option.additionalAction) {
+            optionElm.addEventListener('change', (e) => {option.additionalAction(e)});
+        }
     });
 }
 
