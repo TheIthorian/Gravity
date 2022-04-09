@@ -30,6 +30,7 @@ export default class Gravity {
     randomDirection = false; // Rename to randomVelocity
     planetColors = [];
     MIN_DISPLACEMENT = 50 ** 2;
+    planetRenderer = () => "";
     
 
     constructor(config) {
@@ -88,8 +89,10 @@ export default class Gravity {
     addPlanet(event) {
         const planet = new Planet(
             new Coordinate(event.clientX, -event.clientY), 
-            this.colorHandler.getRandomColor(), 
-            this.randomDirection
+            {
+                color: this.colorHandler.getRandomColor(),  
+                randomDirection: this.randomDirection
+            }
         );
         this.planets.push(planet);
         this.addPlanetToDom(planet);
@@ -105,14 +108,12 @@ export default class Gravity {
         this.dimensions = { height: element.clientHeight, width: element.clientWidth };
         this._initAnnotations(element);
         this.bordered = element.classList.contains('bordered');
-        this.randomDirection = false;
-        this.gravity = true;
         this.element.addEventListener('click', (event) => {this.addPlanet(event);});
     }
 
     addPlanetToDom(planet) {
         const div = document.createElement('div');
-        div.appendChild(document.createTextNode(""));
+        div.appendChild(document.createTextNode(this.planetRenderer()));
         div.classList.add('planet');
         div.style.position = 'absolute';
         div.style.left = planet.position.x + 'px';
@@ -120,7 +121,7 @@ export default class Gravity {
         div.style.width = (planet.radius * 2) + 'px';
         div.style.height = (planet.radius * 2) + 'px';
         div.style.backgroundColor = planet.color;
-        planet.setDiv(div);
+        planet.div = div;
         this.element.appendChild(div);
     }
 
@@ -182,6 +183,44 @@ export default class Gravity {
         }
     }
 
+    removeOuterPlanets() {
+        if (this.bordered) {
+            const outOuterPlanets = [];
+            this.planets.forEach((planet) => {
+                if (!planet.isWithinBounds(this.height, this.width)) {
+                    outOuterPlanets.push(planet);
+                }
+            });
+            outOuterPlanets.forEach((planet, index) => {
+                const idList = this.planets.map(x => x.id);
+                index = idList.indexOf(planet.id);
+                this.removePlanetAnnotationByIndex(index);
+            });
+            outOuterPlanets.forEach((planet, index) => {
+                const idList = this.planets.map(x => x.id);
+                index = idList.indexOf(planet.id);
+                this.removePlanetByIndex(index);
+            })
+        }
+    }
+
+    removePlanetAnnotationByIndex(index) {
+        const planet = this.planets[index];
+        planet.removeLinesFromPlanet(this.annotationElm);
+
+        this.planets.forEach(otherPlanet => {
+            if (planet.id != otherPlanet.id) {
+                planet.removeLinesToPlanet(otherPlanet, this.annotationElm);
+            }
+        });
+    }
+
+    removePlanetByIndex(index) {
+        const planet = this.planets[index];
+        this.element.removeChild(planet.div);
+        this.planets.splice(index, 1);
+    }
+
 
     // Instance controls 
     pauseSim() { clearInterval(this.sim); }
@@ -212,6 +251,7 @@ export default class Gravity {
     toggleBorder() {
         this.bordered = !this.bordered;
         this.element.classList.toggle('bordered');
+        if(this.bordered) this.removeOuterPlanets();
     }
 
     toggleRandomDirection() {
