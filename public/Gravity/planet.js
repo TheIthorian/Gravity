@@ -115,20 +115,21 @@ export default class Planet {
 
     bounce(height, width) {
         const Delta = 2;
+        const dampingFactor = 1.0;
         if (this.position.x + this.radius > width - BORDER_WIDTH) {
-            this.velocity.x *= -0.95;
+            this.velocity.x *= -dampingFactor;
             this.position.x -= Delta;
         }
         if (this.position.x + this.radius < 0 + BORDER_WIDTH) {
-            this.velocity.x *= -0.95;
+            this.velocity.x *= -dampingFactor;
             this.position.x += Delta;
         }
         if (this.position.y - this.radius * 2 < -height + BORDER_WIDTH - this.radius) {
-            this.velocity.y *= -0.95;
+            this.velocity.y *= -dampingFactor;
             this.position.y += Delta;
         }
         if (this.position.y > 0 - BORDER_WIDTH + this.radius) {
-            this.velocity.y *= -0.95;
+            this.velocity.y *= -dampingFactor;
             this.position.y -= Delta;
         }
     }
