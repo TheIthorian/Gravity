@@ -94,11 +94,26 @@ export default class Planet {
         this.resultantForce = resultantForce;
     }
 
-    step({bordered, height, width}){
+    calculateVerticalForce(gravity, {height, width}) {
+        if (!gravity || !this.isWithinBounds(height, width)) { 
+            this.resultantForce = new Force(0, -0).multiply(1);
+            return;
+        }
+
+        if (this.position.y < - height + 10) {
+            this.resultantForce = new Force(0, 0);
+            return
+        }
+
+        this.resultantForce = new Force(0, -1).multiply(1);
+    }
+
+    step({bordered, height, width, dampingFactor, delta, verticalGravity}){
         const dv = this.resultantForce.multiply(STEP_TIME);
         this.velocity = this.velocity.add(dv);
 
-        if (bordered) this.bounce(height, width);
+        if (verticalGravity && this.position.y < -height + 10 && Math.abs(this.velocity.y) < 1) this.velocity.y = 0;
+        if (bordered) this.bounce(height, width, dampingFactor, delta);
 
         const dp = this.velocity.multiply(STEP_TIME);
         this.position = this.position.add(dp);
@@ -113,24 +128,22 @@ export default class Planet {
         return displacement;
     }
 
-    bounce(height, width) {
-        const Delta = 2;
-        const dampingFactor = 1.0;
+    bounce(height, width, dampingFactor = 1.0, delta = 2) {
         if (this.position.x + this.radius > width - BORDER_WIDTH) {
-            this.velocity.x *= -dampingFactor;
-            this.position.x -= Delta;
+            this.velocity.x = -dampingFactor * Math.abs(this.velocity.x);
+            this.position.x -= delta;
         }
         if (this.position.x + this.radius < 0 + BORDER_WIDTH) {
-            this.velocity.x *= -dampingFactor;
-            this.position.x += Delta;
+            this.velocity.x = dampingFactor * Math.abs(this.velocity.x);
+            this.position.x += delta;
         }
         if (this.position.y - this.radius * 2 < -height + BORDER_WIDTH - this.radius) {
-            this.velocity.y *= -dampingFactor;
-            this.position.y += Delta;
+            this.velocity.y = dampingFactor * Math.abs(this.velocity.y);
+            this.position.y += delta;
         }
         if (this.position.y > 0 - BORDER_WIDTH + this.radius) {
-            this.velocity.y *= -dampingFactor;
-            this.position.y -= Delta;
+            this.velocity.y = -dampingFactor * Math.abs(this.velocity.y);
+            this.position.y -= delta;
         }
     }
 

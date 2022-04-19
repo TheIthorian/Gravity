@@ -3,8 +3,6 @@ import { Coordinate } from './vector.js';
 import { INTERVAL } from './constants.js';
 import { ColorHandler } from './util.js';
 
-
-
 export default class Gravity {
     height;
     width;
@@ -19,6 +17,7 @@ export default class Gravity {
     //   simulation
     bordered = false;
     gravity = true;
+    verticalGravity = false;
 
     //   annotations
     drawAnnotations = true;
@@ -53,6 +52,7 @@ export default class Gravity {
             enableBorder: this.bordered,
             enableRandomPlanetDirection: this.randomDirection,
             disableGravity: !this.gravity,
+            enableVerticalGravity: this.verticalGravity,
             enableDrawAnnotations: this.drawAnnotations,
             enableDrawLinesBetweenPlanets: this.drawLinesBetweenPlanets,
             lineWidthBetweenPlanets: this.lineWidthBetweenPlanets,
@@ -67,6 +67,7 @@ export default class Gravity {
             enableBorder, 
             enableRandomPlanetDirection, 
             disableGravity,
+            enableVerticalGravity,
             enableDrawAnnotations,
             enableDrawLinesBetweenPlanets,
             lineWidthBetweenPlanets, // Not implemented
@@ -78,6 +79,7 @@ export default class Gravity {
         this.bordered = enableBorder ?? this.bordered;
         this.randomDirection = enableRandomPlanetDirection ?? this.randomDirection;
         this.gravity = !disableGravity ?? this.gravity;
+        this.verticalGravity = enableVerticalGravity ?? this.verticalGravity;
         this.drawAnnotations = enableDrawAnnotations ?? this.drawAnnotations;
         this.drawLinesBetweenPlanets = enableDrawLinesBetweenPlanets ?? this.drawLinesBetweenPlanets;
         this.lineWidthBetweenPlanets = lineWidthBetweenPlanets ?? this.lineWidthBetweenPlanets;
@@ -145,16 +147,24 @@ export default class Gravity {
     step() {
         for (let i = 0; i < this.planets.length; i++) {
             const planet = this.planets[i];
-            planet.calculateForce(
-                this.planets, 
-                this.gravity, 
-                {...this.dimensions}, 
-                this.MIN_DISPLACEMENT
-            );
+            if (this.verticalGravity) {
+                planet.calculateVerticalForce(this.gravity, {...this.dimensions});
+            } else {
+                planet.calculateForce(
+                    this.planets, 
+                    this.gravity, 
+                    {...this.dimensions}, 
+                    this.MIN_DISPLACEMENT
+                );
+            }
+            
             planet.step({
                 bordered: this.bordered, 
                 height: this.height, 
-                width: this.width
+                width: this.width,
+                dampingFactor: this.verticalGravity ? 0.8 : 1.0,
+                delta : this.verticalGravity ? 0 : null,
+                verticalGravity: this.verticalGravity
             });
         }
 
@@ -286,5 +296,9 @@ export default class Gravity {
         const val = e.target.value;
         console.log('MIN_DISPLACEMENT: ', val);
         this.MIN_DISPLACEMENT = val ** 2;
+    }
+
+    toggleVerticalGravity() {
+        this.verticalGravity = !this.verticalGravity;
     }
 }

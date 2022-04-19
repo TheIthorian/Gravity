@@ -3,6 +3,7 @@ import { Store } from "./Gravity/store.js";
 const OPTIONS = [
     {id: 'use-border', action: 'toggleBorder'},
     {id: 'disable-gravity', action: 'toggleGravity'},
+    {id: 'vertical-gravity', action: 'toggleVerticalGravity'},
     {id: 'random-direction', action: 'toggleRandomDirection'},
     {id: 'enable-draw-annotations', action: 'toggleAnnotations', additionalAction: () => {
         ['enable-draw-lines-between-planets-group'].forEach(id => {

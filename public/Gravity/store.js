@@ -50,6 +50,7 @@ export class Store {
             enableBorder: config['use-border'], 
             enableRandomPlanetDirection: config['random-direction'], 
             disableGravity: config['disable-gravity'], 
+            enableVerticalGravity: config['vertical-gravity'], 
             enableDrawAnnotations: config['enable-draw-annotations'], 
             enableDrawLinesBetweenPlanets: config['enable-draw-lines-between-planets'], 
             // lineWidthBetweenPlanets: undefined, // Not implemented
