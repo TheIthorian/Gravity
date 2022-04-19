@@ -5,15 +5,14 @@ import { Store } from './public/Gravity/store.js';
 import UI from './public/uiController.js';
 
 const configStore = new Store('gravityConfig');
+const motionDetector = new MotionDetector();
 
-const gravity = new Gravity({
-    planetColors: COLORS,
-    ...configStore.convertForGravity()
-});
+const gravity = new Gravity(
+    {
+        planetColors: COLORS,
+        ...configStore.convertForGravity(),
+    }, 
+    motionDetector
+);
 
 UI(gravity);
-
-console.log('config', configStore.getAll());
-console.log('config', gravity.config);
-
-const motion = new MotionDetector();

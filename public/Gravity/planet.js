@@ -193,4 +193,12 @@ export default class Planet {
         const line = this.lines[planet.id];
         if (line) updateSvgLineFromVectors(this.position, planet.position, line);
     }
+
+    updateWindowPosition(oldWindowPosition, newWindowPosition) {
+        const dx = newWindowPosition.x - oldWindowPosition.x;
+        const dy = newWindowPosition.y - oldWindowPosition.y;
+
+        this.position.x -= dx;
+        this.position.y -= -dy;
+    }
 }

@@ -4,12 +4,32 @@ export class MotionDetector {
     };
 
     constructor() {
-        window.addEventListener('windowMotion', (e) => { this.handleWindowMotion(e) });
+        // window.addEventListener('windowMotion', (e) => { this.handleWindowMotion(e) });
         this.pollWindowPosition();
+        this.dispatchHandlers = [];
+    }
+
+    on(eventName, callback) {
+        switch (eventName) {
+            case "windowMotion":
+                this.dispatchHandlers.push(callback);
+        }
+    }
+
+    dispatch(detail) {
+        this.dispatchHandlers.forEach(handler => {
+            handler({detail});
+        });
+
+        const windowMotion = new Event('windowMotion', {
+            bubbles: true
+        });
+        windowMotion.detail = detail;
+        window.dispatchEvent(windowMotion);
     }
 
     handleWindowMotion(e) {
-        console.log('New position: ', e, e.detail.windowPosition);
+        console.log('New position: ', e.detail);
     }
 
     pollWindowPosition() {
@@ -17,22 +37,20 @@ export class MotionDetector {
             const newWindowPosition = {
                 x: window.screenX, y:window.screenY
             };
-
-            if (
-                newWindowPosition.x !== this.currentWindowPosition.x 
-                && newWindowPosition.y !== this.currentWindowPosition.y
-            ) {
-                const windowMotion = new Event('windowMotion', {
-                    bubbles: true
-                });
-                windowMotion.detail = {
-                    windowPosition: {
-                        ...newWindowPosition
-                    }
+            const detail = {
+                newWindowPosition: {
+                    ...newWindowPosition
                 },
-                window.dispatchEvent(windowMotion);
-                this.currentWindowPosition = {...newWindowPosition};
-            }
-        }, 100);
+                oldWindowPosition: {
+                    ...this.currentWindowPosition
+                },
+                windowVelocity: {
+                    x: newWindowPosition.x - this.currentWindowPosition.x,
+                    y: newWindowPosition.y - this.currentWindowPosition.y 
+                }
+            };
+            this.dispatch(detail);
+            this.currentWindowPosition = {...newWindowPosition};
+        }, 10);
     }
 }

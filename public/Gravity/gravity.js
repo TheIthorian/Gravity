@@ -32,8 +32,10 @@ export default class Gravity {
     planetRenderer = () => "";
     
 
-    constructor(config) {
+    constructor(config, motionDetector) {
         this.config = config;
+        this.motionDetector = motionDetector;
+        this.motionDetector.on('windowMotion', (e) => {this.updatePlanetWindowPositions(e.detail)});
         this.planets = [];
         this.colorHandler = new ColorHandler(this.planetColors);
     }
@@ -231,6 +233,15 @@ export default class Gravity {
         const planet = this.planets[index];
         this.element.removeChild(planet.div);
         this.planets.splice(index, 1);
+    }
+
+    updatePlanetWindowPositions(detail) {
+        if (!detail) return;
+        const {oldWindowPosition, newWindowPosition} = detail;
+        this.planets.forEach(planet => {
+            planet.updateWindowPosition(oldWindowPosition, newWindowPosition);
+        });
+        this.updatePlanetDomPositions();
     }
 
 
