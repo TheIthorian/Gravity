@@ -1,5 +1,5 @@
 import Planet from './planet.js';
-import { Coordinate } from './vector.js';
+import { Coordinate, Vector } from './vector.js';
 import { INTERVAL } from './constants.js';
 import { ColorHandler } from './util.js';
 
@@ -18,6 +18,7 @@ export default class Gravity {
     bordered = false;
     gravity = true;
     verticalGravity = false;
+    verticalGravityVector = new Vector(0, -1);
 
     //   annotations
     drawAnnotations = true;
@@ -36,8 +37,16 @@ export default class Gravity {
         this.config = config;
         this.motionDetector = motionDetector;
         this.motionDetector.on('windowMotion', (e) => {this.updatePlanetWindowPositions(e.detail)});
+        this.motionDetector.on('deviceorientation', (e) => {this.updateGravityDirection(e.beta, e.gamma)});
         this.planets = [];
         this.colorHandler = new ColorHandler(this.planetColors);
+    }
+
+    updateGravityDirection(beta, gamma) {
+        const fy = Math.sin(beta * Math.PI / 180);
+        const fx = Math.sin(gamma * Math.PI / 180) * (1 - fy);
+        console.log(fx, fy);
+        this.verticalGravityVector = new Vector(fx, -fy);
     }
 
     get dimensions() {
@@ -150,11 +159,11 @@ export default class Gravity {
         for (let i = 0; i < this.planets.length; i++) {
             const planet = this.planets[i];
             if (this.verticalGravity) {
-                planet.calculateVerticalForce(this.gravity, {...this.dimensions});
+                planet.calculateVerticalForce(this.gravity, {...this.dimensions}, this.verticalGravityVector);
             } else {
                 planet.calculateForce(
                     this.planets, 
-                    this.gravity, 
+                    this.gravity,
                     {...this.dimensions}, 
                     this.MIN_DISPLACEMENT
                 );

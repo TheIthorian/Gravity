@@ -4,21 +4,23 @@ export class MotionDetector {
     };
 
     constructor() {
-        // window.addEventListener('windowMotion', (e) => { this.handleWindowMotion(e) });
         this.pollWindowPosition();
         this.dispatchHandlers = [];
+        window.addEventListener('deviceorientation', (e) => {this.dispatchOrientation(e)});
     }
 
     on(eventName, callback) {
         switch (eventName) {
             case "windowMotion":
-                this.dispatchHandlers.push(callback);
+                this.dispatchHandlers.push({ eventName, callback });
+            case "deviceorientation":
+                this.dispatchHandlers.push({ eventName, callback });
         }
     }
 
-    dispatch(detail) {
+    dispatchWindowMotion(detail) {
         this.dispatchHandlers.forEach(handler => {
-            handler({detail});
+            if(handler.eventName == 'windowMotion') handler.callback({detail});
         });
 
         const windowMotion = new Event('windowMotion', {
@@ -30,6 +32,13 @@ export class MotionDetector {
 
     handleWindowMotion(e) {
         console.log('New position: ', e.detail);
+    }
+
+    dispatchOrientation(event) {
+        // console.log(orientation);
+        this.dispatchHandlers.forEach(handler => {
+            if(handler.eventName == 'deviceorientation') handler.callback(event);
+        });
     }
 
     pollWindowPosition() {
@@ -49,7 +58,7 @@ export class MotionDetector {
                     y: newWindowPosition.y - this.currentWindowPosition.y 
                 }
             };
-            this.dispatch(detail);
+            this.dispatchWindowMotion(detail);
             this.currentWindowPosition = {...newWindowPosition};
         }, 10);
     }

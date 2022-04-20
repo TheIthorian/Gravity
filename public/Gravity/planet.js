@@ -94,7 +94,7 @@ export default class Planet {
         this.resultantForce = resultantForce;
     }
 
-    calculateVerticalForce(gravity, {height, width}) {
+    calculateVerticalForce(gravity, {height, width}, verticalGravityVector) {
         if (!gravity || !this.isWithinBounds(height, width)) { 
             this.resultantForce = new Force(0, -0).multiply(1);
             return;
@@ -105,7 +105,7 @@ export default class Planet {
             return
         }
 
-        this.resultantForce = new Force(0, -1).multiply(1);
+        this.resultantForce = verticalGravityVector.multiply(1);
     }
 
     step({bordered, height, width, dampingFactor, delta, verticalGravity}){
