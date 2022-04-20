@@ -133,3 +133,25 @@ function reset(gravity) {
     document.getElementById('pause').classList.remove('hidden');
     document.getElementById('start').classList.add('hidden');
 }
+
+var output = document.createElement('pre');
+output.style.color = 'white';
+output.style.position = 'absolute';
+output.style.left = '10px';
+output.style.bottom = '10px';
+document.getElementsByTagName('body')[0].appendChild(output);
+
+// Reference to native method(s)
+var oldLog = console.log;
+
+console.log = function (...items) {
+    // Call native method first
+    oldLog.apply(this, items);
+
+    // Use JSON to transform objects, all others display normally
+    items.forEach((item, i) => {
+        items[i] =
+            typeof item === 'object' ? JSON.stringify(item, null, 4) : item;
+    });
+    output.innerHTML = items.join(' ') + '<br />';
+};
