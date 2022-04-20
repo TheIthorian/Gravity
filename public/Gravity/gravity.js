@@ -30,28 +30,31 @@ export default class Gravity {
     randomDirection = false; // Rename to randomVelocity
     planetColors = [];
     MIN_DISPLACEMENT = 50 ** 2;
-    planetRenderer = () => "";
-    
+    planetRenderer = () => '';
 
     constructor(config, motionDetector) {
         this.config = config;
         this.motionDetector = motionDetector;
-        this.motionDetector.on('windowMotion', (e) => {this.updatePlanetWindowPositions(e.detail)});
-        this.motionDetector.on('deviceorientation', (e) => {this.updateGravityDirection(e.beta, e.gamma)});
+        this.motionDetector.on('windowMotion', e => {
+            this.updatePlanetWindowPositions(e.detail);
+        });
+        this.motionDetector.on('deviceorientation', e => {
+            this.updateGravityDirection(e.beta, e.gamma);
+        });
         this.planets = [];
         this.colorHandler = new ColorHandler(this.planetColors);
     }
 
     updateGravityDirection(beta, gamma) {
-        const fy = Math.sin(beta * Math.PI / 180);
-        const fx = Math.sin(gamma * Math.PI / 180) * (1 - fy);
+        const fy = Math.sin((beta * Math.PI) / 180);
+        const fx = Math.sin((gamma * Math.PI) / 180) * (1 - fy);
         console.log(fx, fy);
         this.verticalGravityVector = new Vector(fx, -fy);
     }
 
     get dimensions() {
-        return {height: this.height, width: this.width};
-    } 
+        return { height: this.height, width: this.width };
+    }
     set dimensions(dimensions) {
         if (!dimensions) throw 'dimensions is undefined';
         this.height = dimensions.height ?? 0;
@@ -68,48 +71,62 @@ export default class Gravity {
             enableDrawLinesBetweenPlanets: this.drawLinesBetweenPlanets,
             lineWidthBetweenPlanets: this.lineWidthBetweenPlanets,
             lineBetweenPlanetsFade: this.lineBetweenPlanetsFade,
-            planetColors: this.planetColors
-        }
+            planetColors: this.planetColors,
+        };
     }
     set config(config) {
         config = config ?? {};
 
-        const { 
-            enableBorder, 
-            enableRandomPlanetDirection, 
+        const {
+            enableBorder,
+            enableRandomPlanetDirection,
             disableGravity,
             enableVerticalGravity,
             enableDrawAnnotations,
             enableDrawLinesBetweenPlanets,
             lineWidthBetweenPlanets, // Not implemented
-            lineBetweenPlanetsFade,  // Not implemented
-            planetColors,            // Not implemented
-            minDisplacement
+            lineBetweenPlanetsFade, // Not implemented
+            planetColors, // Not implemented
+            minDisplacement,
         } = config;
-        
+
         this.bordered = enableBorder ?? this.bordered;
-        this.randomDirection = enableRandomPlanetDirection ?? this.randomDirection;
+
+        this.randomDirection =
+            enableRandomPlanetDirection ?? this.randomDirection;
+
         this.gravity = !disableGravity ?? this.gravity;
         this.verticalGravity = enableVerticalGravity ?? this.verticalGravity;
         this.drawAnnotations = enableDrawAnnotations ?? this.drawAnnotations;
-        this.drawLinesBetweenPlanets = enableDrawLinesBetweenPlanets ?? this.drawLinesBetweenPlanets;
-        this.lineWidthBetweenPlanets = lineWidthBetweenPlanets ?? this.lineWidthBetweenPlanets;
-        this.lineBetweenPlanetsFade = lineBetweenPlanetsFade ?? this.lineBetweenPlanetsFade;
+
+        this.drawLinesBetweenPlanets =
+            enableDrawLinesBetweenPlanets ?? this.drawLinesBetweenPlanets;
+
+        this.lineWidthBetweenPlanets =
+            lineWidthBetweenPlanets ?? this.lineWidthBetweenPlanets;
+
+        this.lineBetweenPlanetsFade =
+            lineBetweenPlanetsFade ?? this.lineBetweenPlanetsFade;
+
         this.planetColors = planetColors ?? this.planetColors;
         this.minDisplacement = minDisplacement ?? this.minDisplacement;
     }
 
     addPlanet(event) {
         const planet = new Planet(
-            new Coordinate(event.clientX, -event.clientY), 
+            new Coordinate(event.clientX, -event.clientY),
             {
-                color: this.colorHandler.getRandomColor(),  
-                randomDirection: this.randomDirection
+                color: this.colorHandler.getRandomColor(),
+                randomDirection: this.randomDirection,
             }
         );
         this.planets.push(planet);
         this.addPlanetToDom(planet);
-        planet.addAnnotation(this.planets, this.annotationElm, this.drawLinesBetweenPlanets && this.drawAnnotations);
+        planet.addAnnotation(
+            this.planets,
+            this.annotationElm,
+            this.drawLinesBetweenPlanets && this.drawAnnotations
+        );
 
         if (this.planets.length == 1) {
             this.startSim();
@@ -118,12 +135,17 @@ export default class Gravity {
 
     setElement(element) {
         this.element = element;
-        this.dimensions = { height: element.clientHeight, width: element.clientWidth };
-        this.bordered 
-            ? this.element.classList.add('bordered') 
+        this.dimensions = {
+            height: element.clientHeight,
+            width: element.clientWidth,
+        };
+        this.bordered
+            ? this.element.classList.add('bordered')
             : this.element.classList.remove('bordered');
         this._initAnnotations(element);
-        this.element.addEventListener('click', (event) => {this.addPlanet(event);});
+        this.element.addEventListener('click', event => {
+            this.addPlanet(event);
+        });
     }
 
     addPlanetToDom(planet) {
@@ -133,8 +155,8 @@ export default class Gravity {
         div.style.position = 'absolute';
         div.style.left = planet.position.x + 'px';
         div.style.top = -planet.position.y + 'px';
-        div.style.width = (planet.radius * 2) + 'px';
-        div.style.height = (planet.radius * 2) + 'px';
+        div.style.width = planet.radius * 2 + 'px';
+        div.style.height = planet.radius * 2 + 'px';
         div.style.backgroundColor = planet.color;
         planet.div = div;
         this.element.appendChild(div);
@@ -146,7 +168,11 @@ export default class Gravity {
         annotationElm.setAttributeNS(null, 'id', 'annotation');
         annotationElm.setAttributeNS(null, 'width', this.width);
         annotationElm.setAttributeNS(null, 'height', this.height);
-        annotationElm.setAttributeNS(null, 'viewBox', `0 0 ${this.width} ${this.height}`);
+        annotationElm.setAttributeNS(
+            null,
+            'viewBox',
+            `0 0 ${this.width} ${this.height}`
+        );
         annotationElm.innerHTML = '';
         this.annotationElm = annotationElm;
     }
@@ -159,22 +185,26 @@ export default class Gravity {
         for (let i = 0; i < this.planets.length; i++) {
             const planet = this.planets[i];
             if (this.verticalGravity) {
-                planet.calculateVerticalForce(this.gravity, {...this.dimensions}, this.verticalGravityVector);
+                planet.calculateVerticalForce(
+                    this.gravity,
+                    { ...this.dimensions },
+                    this.verticalGravityVector
+                );
             } else {
                 planet.calculateForce(
-                    this.planets, 
+                    this.planets,
                     this.gravity,
-                    {...this.dimensions}, 
+                    { ...this.dimensions },
                     this.MIN_DISPLACEMENT
                 );
             }
-            
+
             planet.step({
-                bordered: this.bordered, 
-                height: this.height, 
+                bordered: this.bordered,
+                height: this.height,
                 width: this.width,
                 dampingFactor: this.verticalGravity ? 0.8 : 1.0,
-                delta : this.verticalGravity ? 0 : null
+                delta: this.verticalGravity ? 0 : null,
             });
         }
 
@@ -208,7 +238,7 @@ export default class Gravity {
     removeOuterPlanets() {
         if (this.bordered) {
             const outOuterPlanets = [];
-            this.planets.forEach((planet) => {
+            this.planets.forEach(planet => {
                 if (!planet.isWithinBounds(this.height, this.width)) {
                     outOuterPlanets.push(planet);
                 }
@@ -222,7 +252,7 @@ export default class Gravity {
                 const idList = this.planets.map(x => x.id);
                 index = idList.indexOf(planet.id);
                 this.removePlanetByIndex(index);
-            })
+            });
         }
     }
 
@@ -245,19 +275,22 @@ export default class Gravity {
 
     updatePlanetWindowPositions(detail) {
         if (!detail) return;
-        const {oldWindowPosition, newWindowPosition} = detail;
+        const { oldWindowPosition, newWindowPosition } = detail;
         this.planets.forEach(planet => {
             planet.updateWindowPosition(oldWindowPosition, newWindowPosition);
         });
         this.updatePlanetDomPositions();
     }
 
-
-    // Instance controls 
-    pauseSim() { clearInterval(this.sim); }
+    // Instance controls
+    pauseSim() {
+        clearInterval(this.sim);
+    }
     startSim() {
         clearInterval(this.sim);
-        this.sim = setInterval(() => {this.step()}, INTERVAL); 
+        this.sim = setInterval(() => {
+            this.step();
+        }, INTERVAL);
     }
 
     reset() {
@@ -271,20 +304,24 @@ export default class Gravity {
 
     resize() {
         this.dimensions = {
-            height: this.element.clientHeight, 
-            width: this.element.clientWidth
+            height: this.element.clientHeight,
+            width: this.element.clientWidth,
         };
         this.annotationElm.setAttributeNS(null, 'width', this.width);
         this.annotationElm.setAttributeNS(null, 'height', this.height);
-        this.annotationElm.setAttributeNS(null, 'viewBox', `0 0 ${this.width} ${this.height}`);
+        this.annotationElm.setAttributeNS(
+            null,
+            'viewBox',
+            `0 0 ${this.width} ${this.height}`
+        );
     }
 
     toggleBorder() {
         this.bordered = !this.bordered;
-        this.bordered 
-            ? this.element.classList.add('bordered') 
+        this.bordered
+            ? this.element.classList.add('bordered')
             : this.element.classList.remove('bordered');
-        if(this.bordered) this.removeOuterPlanets();
+        if (this.bordered) this.removeOuterPlanets();
     }
 
     toggleRandomDirection() {

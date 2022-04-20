@@ -1,22 +1,31 @@
-import { Store } from "./Gravity/store.js";
+import { Store } from './Gravity/store.js';
 
 const OPTIONS = [
-    {id: 'use-border', action: 'toggleBorder'},
-    {id: 'disable-gravity', action: 'toggleGravity'},
-    {id: 'vertical-gravity', action: 'toggleVerticalGravity'},
-    {id: 'random-direction', action: 'toggleRandomDirection'},
-    {id: 'enable-draw-annotations', action: 'toggleAnnotations', additionalAction: () => {
-        ['enable-draw-lines-between-planets-group'].forEach(id => {
-            const visible = document.getElementById('enable-draw-annotations').checked;
-            const option = document.getElementById(id);
-            visible 
-                ? option.classList.remove('hidden')
-                : option.classList.add('hidden');
-        });
-    }},
-    {id: 'enable-draw-lines-between-planets', action: 'toggleLinesBetweenPlanets'},
-    {id: 'min-displacement', action: 'changeMinimumDisplacement'}
-]
+    { id: 'use-border', action: 'toggleBorder' },
+    { id: 'disable-gravity', action: 'toggleGravity' },
+    { id: 'vertical-gravity', action: 'toggleVerticalGravity' },
+    { id: 'random-direction', action: 'toggleRandomDirection' },
+    {
+        id: 'enable-draw-annotations',
+        action: 'toggleAnnotations',
+        additionalAction: () => {
+            ['enable-draw-lines-between-planets-group'].forEach(id => {
+                const visible = document.getElementById(
+                    'enable-draw-annotations'
+                ).checked;
+                const option = document.getElementById(id);
+                visible
+                    ? option.classList.remove('hidden')
+                    : option.classList.add('hidden');
+            });
+        },
+    },
+    {
+        id: 'enable-draw-lines-between-planets',
+        action: 'toggleLinesBetweenPlanets',
+    },
+    { id: 'min-displacement', action: 'changeMinimumDisplacement' },
+];
 
 const configStore = new Store('gravityConfig');
 
@@ -30,7 +39,9 @@ export default function UI(gravity) {
         setStoredConfigValues();
     });
 
-    window.addEventListener('resize', () => { gravity.resize(); });
+    window.addEventListener('resize', () => {
+        gravity.resize();
+    });
 }
 
 function setStoredConfigValues() {
@@ -46,33 +57,38 @@ function setStoredConfigValues() {
         }
 
         if (option.id === 'enable-draw-annotations') {
-            const optionElm = document.getElementById('enable-draw-lines-between-planets-group');
-            option.checked 
+            const optionElm = document.getElementById(
+                'enable-draw-lines-between-planets-group'
+            );
+            option.checked
                 ? optionElm.classList.remove('hidden')
                 : optionElm.classList.add('hidden');
         }
-    })
+    });
 }
 
 // Hook up additional option checkboxes to the corresponding gravity function
 function hookAdditionalOptions(gravity) {
     // Menu handler
-    document.getElementById('toggle-additional-options')
-            .addEventListener('click', (e) => {toggleDisplayAdditionalOptionsMenu(e)});
+    document
+        .getElementById('toggle-additional-options')
+        .addEventListener('click', e => {
+            toggleDisplayAdditionalOptionsMenu(e);
+        });
 
     OPTIONS.forEach(option => {
         const fn = option.action;
         const optionElm = document.getElementById(option.id);
-        optionElm.addEventListener('change', (e) => { 
+        optionElm.addEventListener('change', e => {
             gravity[fn](e);
             configStore.set(
-                option.id, 
+                option.id,
                 e.target.type === 'checkbox' ? e.target.checked : e.target.value
             );
             console.log('config', configStore.getAll());
         });
         if (option.additionalAction) {
-            optionElm.addEventListener('change', (e) => {
+            optionElm.addEventListener('change', e => {
                 option.additionalAction(e);
             });
         }
@@ -82,15 +98,22 @@ function hookAdditionalOptions(gravity) {
 function toggleDisplayAdditionalOptionsMenu(event) {
     document.getElementById('additional-options').classList.toggle('hidden');
     event.target.value = event.target.value == 'hide' ? 'show' : 'hide';
-    event.target.innerHTML = event.target.value == 'hide' 
-        ? 'Hide additional options' 
-        : 'Show additional options';    
+    event.target.innerHTML =
+        event.target.value == 'hide'
+            ? 'Hide additional options'
+            : 'Show additional options';
 }
 
 function hookControlButtons(gravity) {
-    document.getElementById('pause').addEventListener('click', () => {pause(gravity)});
-    document.getElementById('start').addEventListener('click', () => {start(gravity)});
-    document.getElementById('reset').addEventListener('click', () => {reset(gravity)});
+    document.getElementById('pause').addEventListener('click', () => {
+        pause(gravity);
+    });
+    document.getElementById('start').addEventListener('click', () => {
+        start(gravity);
+    });
+    document.getElementById('reset').addEventListener('click', () => {
+        reset(gravity);
+    });
 }
 
 function pause(gravity) {

@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <head>
-    <meta charset="utf-8">  
-    <meta name="viewport" 
-          content="width=device-width, initial-scale=1">  
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <script type="module" src="./public/uiController.js"></script>
     <script type="module" src="./index.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="./style.css">
-    <link rel="icon" type="image/x-icon" href="./public/favicon.svg">
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <link rel="icon" type="image/x-icon" href="./public/favicon.svg" />
 
     <title>Gravity</title>
 </head>
@@ -19,37 +18,84 @@
             <button id="pause">Pause</button>
             <button id="start" class="hidden">Start</button>
             <button id="reset">Reset</button>
-            
+
             <div class="additional-options-container">
-                <button id="toggle-additional-options" class="tirtiary" value="show">Show additional options</button>
+                <button
+                    id="toggle-additional-options"
+                    class="tirtiary"
+                    value="show"
+                    >Show additional options</button
+                >
                 <div id="additional-options" class="hidden">
                     <div class="input-group">
                         <label for="use-border">Use Border?</label>
-                        <input id="use-border" name="use-border" type="checkbox">
+                        <input
+                            id="use-border"
+                            name="use-border"
+                            type="checkbox"
+                        />
                     </div>
                     <div class="input-group">
                         <label for="disable-gravity">Disable Gravity?</label>
-                        <input id="disable-gravity" name="disable-gravity" type="checkbox">
+                        <input
+                            id="disable-gravity"
+                            name="disable-gravity"
+                            type="checkbox"
+                        />
                     </div>
                     <div class="input-group">
                         <label for="vertical-gravity">Vertical Gravity?</label>
-                        <input id="vertical-gravity" name="vertical-gravity" type="checkbox">
+                        <input
+                            id="vertical-gravity"
+                            name="vertical-gravity"
+                            type="checkbox"
+                        />
                     </div>
                     <div class="input-group">
                         <label for="random-direction">Random Direction?</label>
-                        <input id="random-direction" name="random-direction" type="checkbox">
+                        <input
+                            id="random-direction"
+                            name="random-direction"
+                            type="checkbox"
+                        />
                     </div>
                     <div class="input-group">
-                        <label for="enable-draw-annotations">Enable Annotations?</label>
-                        <input id="enable-draw-annotations" name="enable-draw-annotations" type="checkbox" checked>
+                        <label for="enable-draw-annotations"
+                            >Enable Annotations?</label
+                        >
+                        <input
+                            id="enable-draw-annotations"
+                            name="enable-draw-annotations"
+                            type="checkbox"
+                            checked
+                        />
                     </div>
-                    <div class="input-group" id="enable-draw-lines-between-planets-group">
-                        <label for="enable-draw-lines-between-planets">Enable Lines Between Planets?</label>
-                        <input id="enable-draw-lines-between-planets" name="enable-draw-lines-between-planets" type="checkbox">
+                    <div
+                        class="input-group"
+                        id="enable-draw-lines-between-planets-group"
+                    >
+                        <label for="enable-draw-lines-between-planets"
+                            >Enable Lines Between Planets?</label
+                        >
+                        <input
+                            id="enable-draw-lines-between-planets"
+                            name="enable-draw-lines-between-planets"
+                            type="checkbox"
+                        />
                     </div>
                     <div class="input-group vertical">
-                        <label for="min-displacement">Minimum Effective Gravity Displacement</label>
-                        <input id="min-displacement" name="min-displacement" type="range" min="20" max="100" step="1" value="50">
+                        <label for="min-displacement"
+                            >Minimum Effective Gravity Displacement</label
+                        >
+                        <input
+                            id="min-displacement"
+                            name="min-displacement"
+                            type="range"
+                            min="20"
+                            max="100"
+                            step="1"
+                            value="50"
+                        />
                     </div>
                 </div>
             </div>

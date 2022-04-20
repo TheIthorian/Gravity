@@ -1,9 +1,11 @@
-import { BORDER_WIDTH, G, MAX_STARTING_VELOCITY, STEP_TIME } from "./constants.js";
-import { Velocity, Force } from "./vector.js";
-import {  
-    addSvgLineFromVectors,
-    updateSvgLineFromVectors
-} from "./svg.js";
+import {
+    BORDER_WIDTH,
+    G,
+    MAX_STARTING_VELOCITY,
+    STEP_TIME,
+} from './constants.js';
+import { Velocity, Force } from './vector.js';
+import { addSvgLineFromVectors, updateSvgLineFromVectors } from './svg.js';
 
 const DEFAULT_PLANET_RADIUS = 5;
 const DEFAULT_PLANET_COLOR = '#ffffff';
@@ -16,7 +18,7 @@ function nextId() {
 export default class Planet {
     id;
     div;
-    
+
     // Sim
     position;
     velocity;
@@ -34,21 +36,19 @@ export default class Planet {
         this.config = config;
         this.id = nextId();
         this.position = position;
-        this.velocity = this.randomDirection ? this.getRandomVelocity() : startingVelocity;
+        this.velocity = this.randomDirection
+            ? this.getRandomVelocity()
+            : startingVelocity;
     }
 
     get config() {
         return {
             color: this.color,
-            randomDirection: this.randomDirection
-        }
+            randomDirection: this.randomDirection,
+        };
     }
     set config(config) {
-        const {
-            color,
-            randomDirection,
-            radius
-        } = config;
+        const { color, randomDirection, radius } = config;
 
         this.color = color ?? this.color;
         this.randomDirection = randomDirection ?? this.randomDirection;
@@ -68,10 +68,10 @@ export default class Planet {
         this.div.id = this.id;
     }
 
-    calculateForce(planets, gravity, {height, width}, minDisplacement) {
+    calculateForce(planets, gravity, { height, width }, minDisplacement) {
         let resultantForce = new Force(0, 0);
 
-        if (!gravity) { 
+        if (!gravity) {
             this.resultantForce = resultantForce;
             return;
         }
@@ -83,10 +83,15 @@ export default class Planet {
 
             if (otherPlanet.id != this.id && isOtherInBounds && isInBounds) {
                 const displacement = this.findDisplacement(otherPlanet);
-                const distance2 = Math.max(displacement.mod2(), minDisplacement);
+                const distance2 = Math.max(
+                    displacement.mod2(),
+                    minDisplacement
+                );
                 const unitVector = displacement.findUnitVector();
 
-                const force = unitVector.multiply((G * otherPlanet.mass) / distance2);
+                const force = unitVector.multiply(
+                    (G * otherPlanet.mass) / distance2
+                );
                 resultantForce = resultantForce.add(force);
             }
         }
@@ -94,13 +99,13 @@ export default class Planet {
         this.resultantForce = resultantForce;
     }
 
-    calculateVerticalForce(gravity, {height, width}, verticalGravityVector) {
-        if (!gravity) { 
+    calculateVerticalForce(gravity, { height, width }, verticalGravityVector) {
+        if (!gravity) {
             this.resultantForce = new Force(0, -0).multiply(1);
             return;
         }
 
-        if (!this.isWithinBounds(height, width)) { 
+        if (!this.isWithinBounds(height, width)) {
             this.resultantForce = verticalGravityVector.multiply(0.02);
             return;
         }
@@ -113,7 +118,7 @@ export default class Planet {
         this.resultantForce = verticalGravityVector.multiply(0.5);
     }
 
-    step({bordered, height, width, dampingFactor, delta}){
+    step({ bordered, height, width, dampingFactor, delta }) {
         const dv = this.resultantForce.multiply(STEP_TIME);
         this.velocity = this.velocity.add(dv);
 
@@ -124,12 +129,13 @@ export default class Planet {
         this.position = this.position.add(dp);
 
         const d = {};
-        d.left = this.div.style.left, 
-        d.top = this.div.style.top;
+        (d.left = this.div.style.left), (d.top = this.div.style.top);
     }
 
     findDisplacement(otherPlanet) {
-        const displacement = this.position.findDisplacement(otherPlanet.position);
+        const displacement = this.position.findDisplacement(
+            otherPlanet.position
+        );
         return displacement;
     }
 
@@ -142,7 +148,10 @@ export default class Planet {
             this.velocity.x = dampingFactor * Math.abs(this.velocity.x);
             this.position.x += delta;
         }
-        if (this.position.y - this.radius * 2 < -height + BORDER_WIDTH - this.radius) {
+        if (
+            this.position.y - this.radius * 2 <
+            -height + BORDER_WIDTH - this.radius
+        ) {
             this.velocity.y = dampingFactor * Math.abs(this.velocity.y);
             this.position.y += delta;
         }
@@ -153,17 +162,19 @@ export default class Planet {
     }
 
     isWithinBounds(height, width) {
-        return this.position.x < width - BORDER_WIDTH 
-            && this.position.x > 0 + BORDER_WIDTH 
-            && this.position.y > -height + BORDER_WIDTH 
-            && this.position.y < 0 - BORDER_WIDTH;
+        return (
+            this.position.x < width - BORDER_WIDTH &&
+            this.position.x > 0 + BORDER_WIDTH &&
+            this.position.y > -height + BORDER_WIDTH &&
+            this.position.y < 0 - BORDER_WIDTH
+        );
     }
 
     getRandomVelocity() {
         return new Velocity(
             (Math.random() - 0.5) * MAX_STARTING_VELOCITY,
             (Math.random() - 0.5) * MAX_STARTING_VELOCITY
-        )
+        );
     }
 
     addAnnotation(planetList, svgElement, drawLinesBetweenPlanets) {
@@ -178,7 +189,11 @@ export default class Planet {
     }
 
     addLineToOtherPlanet(planet, svgElement) {
-        return addSvgLineFromVectors(this.position, planet.position, svgElement);
+        return addSvgLineFromVectors(
+            this.position,
+            planet.position,
+            svgElement
+        );
     }
 
     removeLinesFromPlanet(svgElement) {
@@ -192,11 +207,12 @@ export default class Planet {
         const line = planet.lines[this.id];
         if (line) svgElement.removeChild(line);
         delete planet.lines[this.id];
-    }    
+    }
 
     updateLineToPlanet(planet) {
         const line = this.lines[planet.id];
-        if (line) updateSvgLineFromVectors(this.position, planet.position, line);
+        if (line)
+            updateSvgLineFromVectors(this.position, planet.position, line);
     }
 
     updateWindowPosition(oldWindowPosition, newWindowPosition) {

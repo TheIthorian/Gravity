@@ -11,7 +11,6 @@ class Vector {
         const x = this.x + vector.x;
         const y = this.y + vector.y;
         return new Vector(x, y);
-        
     }
 
     multiply(factor) {
@@ -35,7 +34,7 @@ class Vector {
     }
 
     findUnitVector() {
-        return new Vector(this.x / this.mod(), this.y/this.mod());
+        return new Vector(this.x / this.mod(), this.y / this.mod());
     }
 }
 

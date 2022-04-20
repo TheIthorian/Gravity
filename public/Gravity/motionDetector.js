@@ -1,30 +1,34 @@
 export class MotionDetector {
     currentWindowPosition = {
-        x: window.screenX, y:window.screenY
+        x: window.screenX,
+        y: window.screenY,
     };
 
     constructor() {
         this.pollWindowPosition();
         this.dispatchHandlers = [];
-        window.addEventListener('deviceorientation', (e) => {this.dispatchOrientation(e)});
+        window.addEventListener('deviceorientation', e => {
+            this.dispatchOrientation(e);
+        });
     }
 
     on(eventName, callback) {
         switch (eventName) {
-            case "windowMotion":
+            case 'windowMotion':
                 this.dispatchHandlers.push({ eventName, callback });
-            case "deviceorientation":
+            case 'deviceorientation':
                 this.dispatchHandlers.push({ eventName, callback });
         }
     }
 
     dispatchWindowMotion(detail) {
         this.dispatchHandlers.forEach(handler => {
-            if(handler.eventName == 'windowMotion') handler.callback({detail});
+            if (handler.eventName == 'windowMotion')
+                handler.callback({ detail });
         });
 
         const windowMotion = new Event('windowMotion', {
-            bubbles: true
+            bubbles: true,
         });
         windowMotion.detail = detail;
         window.dispatchEvent(windowMotion);
@@ -37,29 +41,31 @@ export class MotionDetector {
     dispatchOrientation(event) {
         // console.log(orientation);
         this.dispatchHandlers.forEach(handler => {
-            if(handler.eventName == 'deviceorientation') handler.callback(event);
+            if (handler.eventName == 'deviceorientation')
+                handler.callback(event);
         });
     }
 
     pollWindowPosition() {
         setInterval(() => {
             const newWindowPosition = {
-                x: window.screenX, y:window.screenY
+                x: window.screenX,
+                y: window.screenY,
             };
             const detail = {
                 newWindowPosition: {
-                    ...newWindowPosition
+                    ...newWindowPosition,
                 },
                 oldWindowPosition: {
-                    ...this.currentWindowPosition
+                    ...this.currentWindowPosition,
                 },
                 windowVelocity: {
                     x: newWindowPosition.x - this.currentWindowPosition.x,
-                    y: newWindowPosition.y - this.currentWindowPosition.y 
-                }
+                    y: newWindowPosition.y - this.currentWindowPosition.y,
+                },
             };
             this.dispatchWindowMotion(detail);
-            this.currentWindowPosition = {...newWindowPosition};
+            this.currentWindowPosition = { ...newWindowPosition };
         }, 10);
     }
 }

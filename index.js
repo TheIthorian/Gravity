@@ -11,7 +11,7 @@ const gravity = new Gravity(
     {
         planetColors: COLORS,
         ...configStore.convertForGravity(),
-    }, 
+    },
     motionDetector
 );
 
@@ -27,17 +27,16 @@ document.getElementsByTagName('body')[0].appendChild(output);
 // Reference to native method(s)
 var oldLog = console.log;
 
-console.log = function( ...items ) {
-
+console.log = function (...items) {
     // Call native method first
-    oldLog.apply(this,items);
+    oldLog.apply(this, items);
 
     // Use JSON to transform objects, all others display normally
-    items.forEach( (item,i)=>{
-        items[i] = (typeof item === 'object' ? JSON.stringify(item,null,4) : item);
+    items.forEach((item, i) => {
+        items[i] =
+            typeof item === 'object' ? JSON.stringify(item, null, 4) : item;
     });
     output.innerHTML = items.join(' ') + '<br />';
-
 };
 
 console.log('hello');

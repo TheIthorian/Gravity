@@ -1,10 +1,9 @@
 export class Store {
-
     storeId = 'gravityConfig';
 
     constructor(storeId, store) {
-        if(storeId) this.storeId = storeId;
-        if(store) this.store = store;
+        if (storeId) this.storeId = storeId;
+        if (store) this.store = store;
     }
 
     getAll() {
@@ -37,7 +36,6 @@ export class Store {
         localStorage.clear();
     }
 
-
     _getStore() {
         const store = JSON.parse(localStorage.getItem(this.storeId));
         return store ? store : {};
@@ -47,16 +45,17 @@ export class Store {
         const config = this.getAll();
         if (!config) return {};
         return {
-            enableBorder: config['use-border'], 
-            enableRandomPlanetDirection: config['random-direction'], 
-            disableGravity: config['disable-gravity'], 
-            enableVerticalGravity: config['vertical-gravity'], 
-            enableDrawAnnotations: config['enable-draw-annotations'], 
-            enableDrawLinesBetweenPlanets: config['enable-draw-lines-between-planets'], 
+            enableBorder: config['use-border'],
+            enableRandomPlanetDirection: config['random-direction'],
+            disableGravity: config['disable-gravity'],
+            enableVerticalGravity: config['vertical-gravity'],
+            enableDrawAnnotations: config['enable-draw-annotations'],
+            enableDrawLinesBetweenPlanets:
+                config['enable-draw-lines-between-planets'],
             // lineWidthBetweenPlanets: undefined, // Not implemented
             // lineBetweenPlanetsFade: undefined,  // Not implemented
             // planetColors: undefined,            // Not implemented
-            minDisplacement: parseInt(config['min-displacement']), 
-        }
+            minDisplacement: parseInt(config['min-displacement']),
+        };
     }
 }

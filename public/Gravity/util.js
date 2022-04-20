@@ -1,13 +1,11 @@
 class ColorHandler {
-
     _colorsA;
     _colorsB;
     _useA;
 
     constructor(colorList) {
-        this._colorsA = colorList && colorList.length 
-            ? colorList.map(x => x)
-            : ['#ffffff'];
+        this._colorsA =
+            colorList && colorList.length ? colorList.map(x => x) : ['#ffffff'];
         this._colorsB = [];
         this._useA = true;
     }
@@ -28,15 +26,19 @@ class ColorHandler {
             const color = a.splice(i, 1);
             b.push(color);
             return color;
-        }
-        const color = this._useA 
-            ? fn(this._colorsA, this._colorsB) 
+        };
+        const color = this._useA
+            ? fn(this._colorsA, this._colorsB)
             : fn(this._colorsB, this._colorsA);
 
         // Swap between the two color arrays so all the colors
         // are used before repeating
-        if (this._colorsA.length == 0) {this._useA = false;}
-        if (this._colorsB.length == 0) {this._useA = true;}
+        if (this._colorsA.length == 0) {
+            this._useA = false;
+        }
+        if (this._colorsB.length == 0) {
+            this._useA = true;
+        }
         return color ?? '#ffffff';
     }
 }
