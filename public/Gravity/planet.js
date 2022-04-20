@@ -95,24 +95,29 @@ export default class Planet {
     }
 
     calculateVerticalForce(gravity, {height, width}, verticalGravityVector) {
-        if (!gravity || !this.isWithinBounds(height, width)) { 
+        if (!gravity) { 
             this.resultantForce = new Force(0, -0).multiply(1);
             return;
         }
 
-        if (this.position.y < - height + 10) {
-            this.resultantForce = new Force(0, 0);
-            return
+        if (!this.isWithinBounds(height, width)) { 
+            this.resultantForce = verticalGravityVector.multiply(0.02);
+            return;
         }
 
-        this.resultantForce = verticalGravityVector.multiply(1);
+        // if (this.position.y < - height + 10 && verticalGravityVector.y < 0) {
+        //     this.resultantForce = new Force(0, 0);
+        //     return;
+        // }
+
+        this.resultantForce = verticalGravityVector.multiply(0.5);
     }
 
-    step({bordered, height, width, dampingFactor, delta, verticalGravity}){
+    step({bordered, height, width, dampingFactor, delta}){
         const dv = this.resultantForce.multiply(STEP_TIME);
         this.velocity = this.velocity.add(dv);
 
-        if (verticalGravity && this.position.y < -height + 10 && Math.abs(this.velocity.y) < 1) this.velocity.y = 0;
+        // if (verticalGravity && this.position.y < -height + 10 && verticalGravity.y < 0) this.velocity.y = 0;
         if (bordered) this.bounce(height, width, dampingFactor, delta);
 
         const dp = this.velocity.multiply(STEP_TIME);

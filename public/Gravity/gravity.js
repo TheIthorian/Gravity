@@ -174,8 +174,7 @@ export default class Gravity {
                 height: this.height, 
                 width: this.width,
                 dampingFactor: this.verticalGravity ? 0.8 : 1.0,
-                delta : this.verticalGravity ? 0 : null,
-                verticalGravity: this.verticalGravity
+                delta : this.verticalGravity ? 0 : null
             });
         }
 
