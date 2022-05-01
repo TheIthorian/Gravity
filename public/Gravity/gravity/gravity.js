@@ -1,6 +1,5 @@
 import Planet from '../planet/planet.js';
 import { Coordinate, Vector } from '../vector.js';
-import { INTERVAL } from '../constants.js';
 import { ColorHandler } from '../util.js';
 
 export default class Gravity {
@@ -9,7 +8,6 @@ export default class Gravity {
     element; // Div to attach content to
     annotationElm; // Svg element to attach annotations to
     planets;
-    sim; // Rename to simInterval
 
     colorHandler;
 
@@ -177,6 +175,7 @@ export default class Gravity {
     }
 
     step() {
+        if (this.paused) return;
         for (let i = 0; i < this.planets.length; i++) {
             const planet = this.planets[i];
             if (this.verticalGravity) {
@@ -205,6 +204,10 @@ export default class Gravity {
 
         this.updatePlanetDomPositions();
         this.updateLinesBetweenPlanets();
+
+        window.requestAnimationFrame(() => {
+            this.step();
+        });
     }
 
     updatePlanetDomPositions() {
@@ -280,13 +283,14 @@ export default class Gravity {
 
     // Instance controls
     pauseSim() {
-        clearInterval(this.sim);
+        this.paused = true;
     }
     startSim() {
-        clearInterval(this.sim);
-        this.sim = setInterval(() => {
+        this.paused = false;
+
+        window.requestAnimationFrame(() => {
             this.step();
-        }, INTERVAL);
+        });
     }
 
     reset() {
@@ -295,7 +299,7 @@ export default class Gravity {
         });
         this.planets = [];
         this._initAnnotations(this.element);
-        this.startSim();
+        this.paused = false;
     }
 
     resize() {
