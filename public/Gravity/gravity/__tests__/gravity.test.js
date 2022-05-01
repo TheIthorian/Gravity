@@ -217,6 +217,22 @@ describe('Gravity', () => {
             gravity.dimensions = { width: 100, height: 200 };
             gravity.updatePlanetDomPositions = jest.fn();
             gravity.updateLinesBetweenPlanets = jest.fn();
+            window.requestAnimationFrame = jest.fn();
+        });
+
+        it('does not run any calculations if the simulation is paused', () => {
+            // Given
+            gravity.paused = true;
+
+            // When
+            const planet = gravity.planets[1];
+            gravity.step();
+
+            // Then
+            expect(planet.calculateVerticalForce).not.toHaveBeenCalled();
+            expect(planet.calculateForce).not.toHaveBeenCalled();
+            expect(planet.step).not.toHaveBeenCalled();
+            expect(window.requestAnimationFrame).not.toHaveBeenCalled();
         });
 
         it('calculates vertical force for each planet', () => {
@@ -249,6 +265,8 @@ describe('Gravity', () => {
 
             expect(gravity.updatePlanetDomPositions).toHaveBeenCalledTimes(1);
             expect(gravity.updateLinesBetweenPlanets).toHaveBeenCalledTimes(1);
+
+            expect(window.requestAnimationFrame).toHaveBeenCalledTimes(1);
         });
 
         it('calculates interaction force for each planet', () => {
