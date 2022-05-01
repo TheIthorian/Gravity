@@ -1,4 +1,4 @@
-import { Store } from './Gravity/store.js';
+import { Store } from './Gravity/store/store.js';
 
 const OPTIONS = [
     { id: 'use-border', action: 'toggleBorder' },
@@ -10,13 +10,9 @@ const OPTIONS = [
         action: 'toggleAnnotations',
         additionalAction: () => {
             ['enable-draw-lines-between-planets-group'].forEach(id => {
-                const visible = document.getElementById(
-                    'enable-draw-annotations'
-                ).checked;
+                const visible = document.getElementById('enable-draw-annotations').checked;
                 const option = document.getElementById(id);
-                visible
-                    ? option.classList.remove('hidden')
-                    : option.classList.add('hidden');
+                visible ? option.classList.remove('hidden') : option.classList.add('hidden');
             });
         },
     },
@@ -57,9 +53,7 @@ function setStoredConfigValues() {
         }
 
         if (option.id === 'enable-draw-annotations') {
-            const optionElm = document.getElementById(
-                'enable-draw-lines-between-planets-group'
-            );
+            const optionElm = document.getElementById('enable-draw-lines-between-planets-group');
             option.checked
                 ? optionElm.classList.remove('hidden')
                 : optionElm.classList.add('hidden');
@@ -70,11 +64,9 @@ function setStoredConfigValues() {
 // Hook up additional option checkboxes to the corresponding gravity function
 function hookAdditionalOptions(gravity) {
     // Menu handler
-    document
-        .getElementById('toggle-additional-options')
-        .addEventListener('click', e => {
-            toggleDisplayAdditionalOptionsMenu(e);
-        });
+    document.getElementById('toggle-additional-options').addEventListener('click', e => {
+        toggleDisplayAdditionalOptionsMenu(e);
+    });
 
     OPTIONS.forEach(option => {
         const fn = option.action;
@@ -99,9 +91,7 @@ function toggleDisplayAdditionalOptionsMenu(event) {
     document.getElementById('additional-options').classList.toggle('hidden');
     event.target.value = event.target.value == 'hide' ? 'show' : 'hide';
     event.target.innerHTML =
-        event.target.value == 'hide'
-            ? 'Hide additional options'
-            : 'Show additional options';
+        event.target.value == 'hide' ? 'Hide additional options' : 'Show additional options';
 }
 
 function hookControlButtons(gravity) {
@@ -150,8 +140,7 @@ console.log = function (...items) {
 
     // Use JSON to transform objects, all others display normally
     items.forEach((item, i) => {
-        items[i] =
-            typeof item === 'object' ? JSON.stringify(item, null, 4) : item;
+        items[i] = typeof item === 'object' ? JSON.stringify(item, null, 4) : item;
     });
     output.innerHTML = items.join(' ') + '<br />';
 };

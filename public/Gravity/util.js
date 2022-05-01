@@ -4,8 +4,7 @@ class ColorHandler {
     _useA;
 
     constructor(colorList) {
-        this._colorsA =
-            colorList && colorList.length ? colorList.map(x => x) : ['#ffffff'];
+        this._colorsA = colorList && colorList.length ? colorList.map(x => x) : ['#ffffff'];
         this._colorsB = [];
         this._useA = true;
     }
@@ -31,8 +30,7 @@ class ColorHandler {
             ? fn(this._colorsA, this._colorsB)
             : fn(this._colorsB, this._colorsA);
 
-        // Swap between the two color arrays so all the colors
-        // are used before repeating
+        // Swap between the two color arrays so all the colors are used before repeating
         if (this._colorsA.length == 0) {
             this._useA = false;
         }

@@ -1,5 +1,4 @@
 function addSvgLine(x1, x2, y1, y2, svgElement) {
-    //  Should use the same line and then change the position to animate
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     line.setAttributeNS(null, 'x1', x1);
     line.setAttributeNS(null, 'x2', x2);
@@ -27,9 +26,4 @@ function updateSvgLineFromVectors(p1, p2, lineElement) {
     updateSvgLine(p1.x, p2.x, p1.y, p2.y, lineElement);
 }
 
-export {
-    addSvgLine,
-    addSvgLineFromVectors,
-    updateSvgLine,
-    updateSvgLineFromVectors,
-};
+export { addSvgLine, addSvgLineFromVectors, updateSvgLine, updateSvgLineFromVectors };

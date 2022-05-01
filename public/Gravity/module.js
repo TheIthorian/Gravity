@@ -1,3 +1,3 @@
-import Gravity from './gravity.js';
+import Gravity from './gravity/gravity.js';
 
 export { Gravity };
