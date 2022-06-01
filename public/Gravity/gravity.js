@@ -354,7 +354,6 @@ export default class Gravity {
 
     changeMinimumDisplacement(e) {
         const val = e.target.value;
-        console.log('MIN_DISPLACEMENT: ', val);
         this.MIN_DISPLACEMENT = val ** 2;
     }
 
