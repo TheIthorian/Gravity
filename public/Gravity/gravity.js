@@ -142,7 +142,7 @@ export default class Gravity {
         this.bordered
             ? this.element.classList.add('bordered')
             : this.element.classList.remove('bordered');
-        this._initAnnotations(element);
+        this._initAnnotations();
         this.element.addEventListener('click', event => {
             this.addPlanet(event.clientX, event.clientY);
         });
@@ -164,9 +164,12 @@ export default class Gravity {
         this.element.appendChild(div);
     }
 
-    _initAnnotations(element) {
+    /**
+     *
+     */
+    _initAnnotations() {
         this.clearAnnotations();
-        const annotationElm = element.getElementsByTagName('svg')[0];
+        const annotationElm = this.element.getElementsByTagName('svg')[0];
         annotationElm.setAttributeNS(null, 'id', 'annotation');
         annotationElm.setAttributeNS(null, 'width', this.width);
         annotationElm.setAttributeNS(null, 'height', this.height);
@@ -303,7 +306,7 @@ export default class Gravity {
             this.element.removeChild(planet.div);
         });
         this.planets = [];
-        this._initAnnotations(this.element);
+        this._initAnnotations();
         this.paused = false;
     }
 
