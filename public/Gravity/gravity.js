@@ -251,13 +251,10 @@ export default class Gravity {
                 }
             });
             outOuterPlanets.forEach(planet => {
-                const idList = this.planets.map(x => x.id);
                 this.removePlanetAnnotationById(planet.id);
             });
-            outOuterPlanets.forEach((planet, index) => {
-                const idList = this.planets.map(x => x.id);
-                index = idList.indexOf(planet.id);
-                this.removePlanetByIndex(index);
+            outOuterPlanets.forEach(planet => {
+                this.removePlanetById(planet.id);
             });
         }
     }
@@ -277,7 +274,8 @@ export default class Gravity {
         });
     }
 
-    removePlanetByIndex(index) {
+    removePlanetById(id) {
+        const index = this.planets.map(x => x.id).indexOf(id);
         const planet = this.planets[index];
         this.element.removeChild(planet.div);
         this.planets.splice(index, 1);
