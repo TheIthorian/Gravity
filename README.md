@@ -10,7 +10,7 @@ Simple interactive particle simulator.
 
 -   N-body simulation.
 -   All elements are rendered to the DOM and not to a canvas. Renderers are configurable.
--   **Node.js NOT required**. This module should work on any browser directly as-is.
+-   **Node.js NOT required** (though the website needs to be hosted to avoid CORS errors).
 -   Customisable options and simulation configuration.
 -   Can be easily integrated to any website.
 -   Example simulation UI controls.
@@ -50,7 +50,22 @@ This is an overview of the controls in our [example](https://theithorian.github.
 
 ### Usage
 
-To use this in your own projects, download the Gravity directory, and import from the `module.js` file. Create a new instance of the Gravity class and attach it to an element in the DOM.
+To use this in your own projects, download the Gravity directory, and import from the `module.js` file. Create a new instance of the Gravity class and attach it to an element in the DOM. The element must have an `<svg>` child for the annotations to work correctly.
+
+In `index.html`: 
+
+```
+<!DOCTYPE html>
+<head>
+    <script type="module" src="./index.js"></script>
+</head>
+
+<body style="margin: 0px; overflow: hidden">
+    <div id="myElement" style="width: 100vw; height: 100vh; background-color: black">
+        <svg></svg>
+    </div>
+</body>
+```
 
 In `index.js`:
 
@@ -60,7 +75,8 @@ import { Gravity } from './Gravity/module.js';
 const myElement = document.getElementById('myElement');
 const gravity = new Gravity();
 
-gravity.setElement(myElement) // Attaches the instance with an element in the DOM
+// Attaches the instance with an element in the DOM
+gravity.setElement(myElement) 
 
 ...
 
