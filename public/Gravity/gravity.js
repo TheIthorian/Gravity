@@ -250,10 +250,9 @@ export default class Gravity {
                     outOuterPlanets.push(planet);
                 }
             });
-            outOuterPlanets.forEach((planet, index) => {
+            outOuterPlanets.forEach(planet => {
                 const idList = this.planets.map(x => x.id);
-                index = idList.indexOf(planet.id);
-                this.removePlanetAnnotationByIndex(index);
+                this.removePlanetAnnotationById(planet.id);
             });
             outOuterPlanets.forEach((planet, index) => {
                 const idList = this.planets.map(x => x.id);
@@ -263,8 +262,12 @@ export default class Gravity {
         }
     }
 
-    removePlanetAnnotationByIndex(index) {
-        const planet = this.planets[index];
+    /**
+     * Removes all annotations for a given planet index
+     * @param {int} index
+     */
+    removePlanetAnnotationById(id) {
+        const planet = this.planets.find(item => item.id == id);
         planet.removeLinesFromPlanet(this.annotationElm);
 
         this.planets.forEach(otherPlanet => {
