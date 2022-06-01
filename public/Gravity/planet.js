@@ -5,9 +5,15 @@ import { addSvgLineFromVectors, updateSvgLineFromVectors } from './svg.js';
 const DEFAULT_PLANET_RADIUS = 5;
 const DEFAULT_PLANET_COLOR = '#ffffff';
 
-var id = 1;
+const idGen = (function* () {
+    let id = 1;
+    while (true) {
+        yield id++;
+    }
+})();
+
 function nextId() {
-    return id++;
+    return idGen.next().value;
 }
 
 export default class Planet {
