@@ -1,6 +1,6 @@
-import Planet from '../planet/planet.js';
-import { Coordinate, Vector } from '../vector.js';
-import { ColorHandler } from '../util.js';
+import Planet from './planet.js';
+import { Coordinate, Vector } from './vector.js';
+import { ColorHandler } from './util.js';
 
 export default class Gravity {
     height;

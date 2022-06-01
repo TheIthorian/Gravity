@@ -1,6 +1,6 @@
-import { BORDER_WIDTH, G, MAX_STARTING_VELOCITY, STEP_TIME } from '../constants.js';
-import { Velocity, Force } from '../vector.js';
-import { addSvgLineFromVectors, updateSvgLineFromVectors } from '../svg.js';
+import { BORDER_WIDTH, G, MAX_STARTING_VELOCITY, STEP_TIME } from './constants.js';
+import { Velocity, Force } from './vector.js';
+import { addSvgLineFromVectors, updateSvgLineFromVectors } from './svg.js';
 
 const DEFAULT_PLANET_RADIUS = 5;
 const DEFAULT_PLANET_COLOR = '#ffffff';

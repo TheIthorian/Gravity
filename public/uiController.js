@@ -1,4 +1,4 @@
-import { Store } from './Gravity/store/store.js';
+import { Store } from './Gravity/store.js';
 
 const OPTIONS = [
     { id: 'use-border', action: 'toggleBorder' },

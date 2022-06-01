@@ -1,15 +1,13 @@
 import { Store } from '../store.js';
-import '../../__mocks__/localstorage.js';
 
 const STORE_ID = 'test-store';
 
-jest.mock('../../__mocks__/localstorage.js');
 const store = new Store(STORE_ID);
 
-const getItem = jest.spyOn(localStorage, 'getItem');
-const setItem = jest.spyOn(localStorage, 'setItem');
-const removeItem = jest.spyOn(localStorage, 'removeItem');
-const clear = jest.spyOn(localStorage, 'clear');
+const getItem = jest.spyOn(window.localStorage.__proto__, 'getItem');
+const setItem = jest.spyOn(window.localStorage.__proto__, 'setItem');
+const removeItem = jest.spyOn(window.localStorage.__proto__, 'removeItem');
+const clear = jest.spyOn(window.localStorage.__proto__, 'clear');
 
 describe('Store', () => {
     afterEach(() => {
@@ -116,7 +114,7 @@ describe('Store', () => {
             // Then
             expect(store.getAll()).toBeNull();
             expect(store2.getAll()).toBeNull();
-            expect(localStorage.clear).toBeCalledTimes(1);
+            expect(clear).toBeCalledTimes(1);
         });
     });
 });

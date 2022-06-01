@@ -1,6 +1,6 @@
-import Planet from '../../planet/planet.js';
-import { Coordinate } from '../../vector.js';
-import { MAX_STARTING_VELOCITY } from '../../constants';
+import Planet from '../planet.js';
+import { Coordinate } from '../vector.js';
+import { MAX_STARTING_VELOCITY } from '../constants';
 
 // jest.mock('../../vector.js');
 
@@ -83,8 +83,8 @@ describe('Gravity', () => {
             const config = planet.config;
 
             // Then
-            expect(config.color).toBe('#ffffff');
-            expect(config.randomDirection).toBe(true);
+            expect(config.color).toBe('#aaaaaa');
+            expect(config.randomDirection).toBe(false);
             expect(config.radius).toBe(10);
         });
     });

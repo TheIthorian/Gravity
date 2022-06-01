@@ -1,10 +1,10 @@
 import Gravity from '../gravity.js';
-import Planet from '../../planet/planet.js';
+import Planet from '../planet.js';
 
-import { Coordinate } from '../../vector.js';
+import { Coordinate } from '../vector.js';
 
-jest.mock('../../planet/planet.js');
-jest.mock('../../util.js');
+jest.mock('../planet.js');
+jest.mock('../util.js');
 
 describe('Gravity', () => {
     afterEach(() => {
