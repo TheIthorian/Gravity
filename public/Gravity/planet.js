@@ -198,7 +198,7 @@ export default class Planet {
         const dx = newWindowPosition.x - oldWindowPosition.x;
         const dy = newWindowPosition.y - oldWindowPosition.y;
 
-        this.position.x -= dx;
-        this.position.y -= -dy;
+        this.position.x -= dx / 2;
+        this.position.y -= -dy / 2;
     }
 }
