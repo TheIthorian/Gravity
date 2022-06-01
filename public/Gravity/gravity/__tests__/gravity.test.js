@@ -1,6 +1,5 @@
 import Gravity from '../gravity.js';
 import Planet from '../../planet/planet.js';
-// import { ColorHandler } from '../../util.js';
 
 import { Coordinate } from '../../vector.js';
 
