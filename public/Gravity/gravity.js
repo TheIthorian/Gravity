@@ -93,7 +93,7 @@ export default class Gravity {
             enableDrawLinesBetweenPlanets,
             lineWidthBetweenPlanets, // Not implemented
             lineBetweenPlanetsFade, // Not implemented
-            planetColors, // Not implemented
+            planetColors,
             minDisplacement,
         } = config;
 
