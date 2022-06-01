@@ -25,6 +25,8 @@ const OPTIONS = [
 
 const configStore = new Store('gravityConfig');
 
+var debugElement;
+
 export default function UI(gravity) {
     window.addEventListener('load', () => {
         gravity.setElement(document.getElementById('gravity')); // Sets the gravity div
@@ -34,6 +36,7 @@ export default function UI(gravity) {
         hookAdditionalOptions(gravity);
         setStoredConfigValues();
         setupLogger();
+        setupHotkeys(gravity);
     });
 
     window.addEventListener('resize', () => {
@@ -88,11 +91,20 @@ function hookAdditionalOptions(gravity) {
     });
 }
 
-function toggleDisplayAdditionalOptionsMenu(event) {
-    document.getElementById('additional-options').classList.toggle('hidden');
-    event.target.value = event.target.value == 'hide' ? 'show' : 'hide';
-    event.target.innerHTML =
-        event.target.value == 'hide' ? 'Hide additional options' : 'Show additional options';
+function toggleDisplayAdditionalOptionsMenu() {
+    const button = document.getElementById('toggle-additional-options');
+    const menu = button.nextElementSibling;
+    const isHidden = menu.classList.contains('hidden');
+
+    if (isHidden) {
+        button.innerHTML = 'Hide additional options';
+        button.value = 'hide';
+        menu.classList.remove('hidden');
+    } else {
+        button.innerHTML = 'Show additional options';
+        button.value = 'show';
+        menu.classList.add('hidden');
+    }
 }
 
 function hookControlButtons(gravity) {
@@ -125,21 +137,19 @@ function reset(gravity) {
     document.getElementById('start').classList.add('hidden');
 }
 
+function toggleDebug() {
+    debugElement?.classList?.toggle('hidden');
+}
+
 function setupLogger() {
-    var output = document.createElement('pre');
+    debugElement = document.createElement('pre');
 
-    output.style.color = 'white';
-    output.style.position = 'absolute';
-    output.style.left = '10px';
-    output.style.bottom = '10px';
-    output.classList.add('hidden');
-    document.getElementsByTagName('body')[0].appendChild(output);
-
-    window.addEventListener('keydown', e => {
-        if (e.code == 'KeyD') {
-            output.classList.toggle('hidden');
-        }
-    });
+    debugElement.style.color = 'white';
+    debugElement.style.position = 'absolute';
+    debugElement.style.left = '10px';
+    debugElement.style.bottom = '10px';
+    debugElement.classList.add('hidden');
+    document.getElementsByTagName('body')[0].appendChild(debugElement);
 
     // Reference to native method
     var oldLog = console.log;
@@ -152,6 +162,29 @@ function setupLogger() {
         items.forEach((item, i) => {
             items[i] = typeof item === 'object' ? JSON.stringify(item, null, 4) : item;
         });
-        output.innerHTML = items.join(' ') + '<br />';
+        debugElement.innerHTML = items.join(' ') + '<br />';
     };
+}
+
+function setupHotkeys(gravity) {
+    const hotkeys = {
+        KeyM: toggleDisplayAdditionalOptionsMenu,
+        KeyP: () => pause(gravity),
+        KeyD: toggleDebug,
+        Space: () =>
+            gravity.addPlanet({
+                clientX: Math.random() * window.innerWidth,
+                clientY: Math.random() * window.innerHeight,
+            }),
+    };
+
+    window.addEventListener('keydown', e => {
+        console.log(e, e.code);
+        for (const [key, fn] of Object.entries(hotkeys)) {
+            if (e.code === key) {
+                console.log(key);
+                fn();
+            }
+        }
+    });
 }
