@@ -169,7 +169,8 @@ function setupLogger() {
 function setupHotkeys(gravity) {
     const hotkeys = {
         KeyM: toggleDisplayAdditionalOptionsMenu,
-        KeyP: () => pause(gravity),
+        KeyP: () => (gravity.paused ? start(gravity) : pause(gravity)),
+        KeyR: () => reset(gravity),
         KeyD: toggleDebug,
         Space: () =>
             gravity.addPlanet(
