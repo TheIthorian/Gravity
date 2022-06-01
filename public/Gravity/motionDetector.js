@@ -23,8 +23,9 @@ export class MotionDetector {
 
     dispatchWindowMotion(detail) {
         this.dispatchHandlers.forEach(handler => {
-            if (handler.eventName == 'windowMotion')
+            if (handler.eventName == 'windowMotion') {
                 handler.callback({ detail });
+            }
         });
 
         const windowMotion = new Event('windowMotion', {
@@ -39,10 +40,10 @@ export class MotionDetector {
     }
 
     dispatchOrientation(event) {
-        // console.log(orientation);
         this.dispatchHandlers.forEach(handler => {
-            if (handler.eventName == 'deviceorientation')
+            if (handler.eventName == 'deviceorientation') {
                 handler.callback(event);
+            }
         });
     }
 
