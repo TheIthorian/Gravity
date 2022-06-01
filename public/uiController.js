@@ -172,10 +172,10 @@ function setupHotkeys(gravity) {
         KeyP: () => pause(gravity),
         KeyD: toggleDebug,
         Space: () =>
-            gravity.addPlanet({
-                clientX: Math.random() * window.innerWidth,
-                clientY: Math.random() * window.innerHeight,
-            }),
+            gravity.addPlanet(
+                Math.random() * window.innerWidth,
+                Math.random() * window.innerHeight
+            ),
     };
 
     window.addEventListener('keydown', e => {
