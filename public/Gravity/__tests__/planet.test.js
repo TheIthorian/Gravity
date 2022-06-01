@@ -2,8 +2,6 @@ import Planet from '../planet.js';
 import { Vector } from '../vector.js';
 import { MAX_STARTING_VELOCITY } from '../constants';
 
-// jest.mock('../../vector.js');
-
 describe('Gravity', () => {
     afterEach(() => {
         jest.clearAllMocks();
