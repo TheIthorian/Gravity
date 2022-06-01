@@ -26,6 +26,7 @@ body {
     height: 100%;
     overflow: hidden;
     box-sizing: border-box;
+    border: solid 3px rgb(13, 13, 41);
 }
 
 #gravity.bordered {
