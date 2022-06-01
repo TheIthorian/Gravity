@@ -38,6 +38,7 @@ export default class Planet {
         return {
             color: this.color,
             randomDirection: this.randomDirection,
+            radius: this.radius,
         };
     }
     set config(config) {
