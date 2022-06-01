@@ -33,6 +33,7 @@ export default function UI(gravity) {
         hookControlButtons(gravity);
         hookAdditionalOptions(gravity);
         setStoredConfigValues();
+        setupLogger();
     });
 
     window.addEventListener('resize', () => {
@@ -124,23 +125,33 @@ function reset(gravity) {
     document.getElementById('start').classList.add('hidden');
 }
 
-var output = document.createElement('pre');
-output.style.color = 'white';
-output.style.position = 'absolute';
-output.style.left = '10px';
-output.style.bottom = '10px';
-document.getElementsByTagName('body')[0].appendChild(output);
+function setupLogger() {
+    var output = document.createElement('pre');
 
-// Reference to native method(s)
-var oldLog = console.log;
+    output.style.color = 'white';
+    output.style.position = 'absolute';
+    output.style.left = '10px';
+    output.style.bottom = '10px';
+    output.classList.add('hidden');
+    document.getElementsByTagName('body')[0].appendChild(output);
 
-console.log = function (...items) {
-    // Call native method first
-    oldLog.apply(this, items);
-
-    // Use JSON to transform objects, all others display normally
-    items.forEach((item, i) => {
-        items[i] = typeof item === 'object' ? JSON.stringify(item, null, 4) : item;
+    window.addEventListener('keydown', e => {
+        if (e.code == 'KeyD') {
+            output.classList.toggle('hidden');
+        }
     });
-    output.innerHTML = items.join(' ') + '<br />';
-};
+
+    // Reference to native method
+    var oldLog = console.log;
+
+    console.log = function (...items) {
+        // Call native method first
+        oldLog.apply(this, items);
+
+        // Use JSON to transform objects, all others display normally
+        items.forEach((item, i) => {
+            items[i] = typeof item === 'object' ? JSON.stringify(item, null, 4) : item;
+        });
+        output.innerHTML = items.join(' ') + '<br />';
+    };
+}

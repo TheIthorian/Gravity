@@ -98,3 +98,7 @@ button.tirtiary {
 label {
     color: #ffffff;
 }
+
+.hidden {
+    display: none;
+}
