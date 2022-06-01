@@ -23,6 +23,9 @@ class Vector {
         return Math.sqrt(this.mod2());
     }
 
+    /**
+     * @returns {double} Square of scalar difference between vector positions
+     */
     mod2() {
         return this.x ** 2 + this.y ** 2;
     }
