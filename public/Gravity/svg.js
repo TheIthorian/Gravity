@@ -7,7 +7,7 @@ function addSvgLine(x1, x2, y1, y2, svgElement) {
     line.setAttributeNS(null, 'stroke-width', '2');
     line.setAttributeNS(null, 'stroke', 'white');
 
-    svgElement.appendChild(line);
+    svgElement?.appendChild(line);
     return line;
 }
 

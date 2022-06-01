@@ -182,12 +182,14 @@ export default class Gravity {
     _initAnnotations() {
         this.clearAnnotations();
         const annotationElm = this.element.getElementsByTagName('svg')[0];
-        annotationElm.setAttributeNS(null, 'id', 'annotation');
-        annotationElm.setAttributeNS(null, 'width', this.width);
-        annotationElm.setAttributeNS(null, 'height', this.height);
-        annotationElm.setAttributeNS(null, 'viewBox', `0 0 ${this.width} ${this.height}`);
-        annotationElm.innerHTML = '';
-        this.annotationElm = annotationElm;
+        if (annotationElm) {
+            annotationElm.setAttributeNS(null, 'id', 'annotation');
+            annotationElm.setAttributeNS(null, 'width', this.width);
+            annotationElm.setAttributeNS(null, 'height', this.height);
+            annotationElm.setAttributeNS(null, 'viewBox', `0 0 ${this.width} ${this.height}`);
+            annotationElm.innerHTML = '';
+            this.annotationElm = annotationElm;
+        }
     }
 
     /**
@@ -349,9 +351,9 @@ export default class Gravity {
             height: this.element.clientHeight,
             width: this.element.clientWidth,
         };
-        this.annotationElm.setAttributeNS(null, 'width', this.width);
-        this.annotationElm.setAttributeNS(null, 'height', this.height);
-        this.annotationElm.setAttributeNS(null, 'viewBox', `0 0 ${this.width} ${this.height}`);
+        this.annotationElm?.setAttributeNS(null, 'width', this.width);
+        this.annotationElm?.setAttributeNS(null, 'height', this.height);
+        this.annotationElm?.setAttributeNS(null, 'viewBox', `0 0 ${this.width} ${this.height}`);
     }
 
     toggleBorder() {
@@ -373,7 +375,7 @@ export default class Gravity {
     toggleAnnotations() {
         this.drawAnnotations = !this.drawAnnotations;
         const display = this.drawAnnotations ? '' : 'none';
-        this.annotationElm.style.display = display;
+        if (this.annotationElm) this.annotationElm.style.display = display;
     }
 
     toggleLinesBetweenPlanets() {

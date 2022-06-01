@@ -219,7 +219,7 @@ export default class Planet {
      */
     removeLinesFromPlanet(svgElement) {
         Object.values(this.lines).forEach(line => {
-            svgElement.removeChild(line);
+            svgElement?.removeChild(line);
         });
         this.lines = {};
     }
@@ -231,7 +231,7 @@ export default class Planet {
      */
     removeLinesToPlanet(planet, svgElement) {
         const line = planet.lines[this.id];
-        if (line) svgElement.removeChild(line);
+        if (line) svgElement?.removeChild(line);
         delete planet.lines[this.id];
     }
 
