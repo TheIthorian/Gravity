@@ -1,5 +1,5 @@
 import Planet from './planet.js';
-import { Coordinate, Vector } from './vector.js';
+import { Vector } from './vector.js';
 import { ColorHandler } from './util.js';
 
 export default class Gravity {
@@ -111,7 +111,7 @@ export default class Gravity {
     }
 
     addPlanet(event) {
-        const planet = new Planet(new Coordinate(event.clientX, -event.clientY), {
+        const planet = new Planet(new Vector(event.clientX, -event.clientY), {
             color: this.colorHandler.getRandomColor(),
             randomDirection: this.randomDirection,
         });

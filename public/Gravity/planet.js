@@ -1,5 +1,5 @@
 import { BORDER_WIDTH, G, MAX_STARTING_VELOCITY, STEP_TIME } from './constants.js';
-import { Velocity, Force } from './vector.js';
+import { Vector } from './vector.js';
 import { addSvgLineFromVectors, updateSvgLineFromVectors } from './svg.js';
 
 const DEFAULT_PLANET_RADIUS = 5;
@@ -17,7 +17,7 @@ export default class Planet {
     // Sim
     position;
     velocity;
-    resultantForce = new Force(0, 0);
+    resultantForce = new Vector(0, 0);
 
     // Annotations
     lines = {};
@@ -27,7 +27,7 @@ export default class Planet {
     radius = DEFAULT_PLANET_RADIUS;
     randomDirection = false;
 
-    constructor(position, config = {}, startingVelocity = new Velocity(0, 0)) {
+    constructor(position, config = {}, startingVelocity = new Vector(0, 0)) {
         this.config = config;
         this.id = nextId();
         this.position = position;
@@ -63,7 +63,7 @@ export default class Planet {
     }
 
     calculateForce(planets, gravity, { height, width }, minDisplacement) {
-        let resultantForce = new Force(0, 0);
+        let resultantForce = new Vector(0, 0);
 
         if (!gravity) {
             this.resultantForce = resultantForce;
@@ -90,7 +90,7 @@ export default class Planet {
 
     calculateVerticalForce(gravity, { height, width }, verticalGravityVector) {
         if (!gravity) {
-            this.resultantForce = new Force(0, -0).multiply(1);
+            this.resultantForce = new Vector(0, -0).multiply(1);
             return;
         }
 
@@ -155,7 +155,7 @@ export default class Planet {
     }
 
     getRandomVelocity() {
-        return new Velocity(
+        return new Vector(
             (Math.random() - 0.5) * MAX_STARTING_VELOCITY,
             (Math.random() - 0.5) * MAX_STARTING_VELOCITY
         );

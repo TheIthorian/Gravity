@@ -1,7 +1,7 @@
 import Gravity from '../gravity.js';
 import Planet from '../planet.js';
 
-import { Coordinate } from '../vector.js';
+import { Vector } from '../vector.js';
 
 jest.mock('../planet.js');
 jest.mock('../util.js');
@@ -88,7 +88,7 @@ describe('Gravity', () => {
             gravity.addPlanet(event);
 
             // Then
-            expect(Planet).toHaveBeenCalledWith(new Coordinate(10, -20), {
+            expect(Planet).toHaveBeenCalledWith(new Vector(10, -20), {
                 color: '#ffffff',
                 randomDirection: false,
             });
@@ -152,7 +152,7 @@ describe('Gravity', () => {
         it('sets the element style and add it to the DOM', () => {
             // Given
             const planet = {
-                position: new Coordinate(10, 20),
+                position: new Vector(10, 20),
                 color: '#ffffff',
                 radius: 10,
             };
@@ -208,10 +208,7 @@ describe('Gravity', () => {
 
         beforeEach(() => {
             gravity = new Gravity();
-            gravity.planets = [
-                new Planet(new Coordinate(0, 10)),
-                new Planet(new Coordinate(10, 20)),
-            ];
+            gravity.planets = [new Planet(new Vector(0, 10)), new Planet(new Vector(10, 20))];
             gravity.gravity = true;
             gravity.dimensions = { width: 100, height: 200 };
             gravity.updatePlanetDomPositions = jest.fn();
@@ -328,10 +325,7 @@ describe('Gravity', () => {
 
         beforeEach(() => {
             gravity = new Gravity();
-            gravity.planets = [
-                new Planet(new Coordinate(0, 10)),
-                new Planet(new Coordinate(10, 20)),
-            ];
+            gravity.planets = [new Planet(new Vector(0, 10)), new Planet(new Vector(10, 20))];
         });
 
         it('does not update lines when drawAnnotations is false', () => {

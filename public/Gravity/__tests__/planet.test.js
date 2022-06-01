@@ -1,5 +1,5 @@
 import Planet from '../planet.js';
-import { Coordinate } from '../vector.js';
+import { Vector } from '../vector.js';
 import { MAX_STARTING_VELOCITY } from '../constants';
 
 // jest.mock('../../vector.js');
@@ -16,7 +16,7 @@ describe('Gravity', () => {
                 randomDirection: true,
             };
             jest.spyOn(global.Math, 'random').mockReturnValue(0.8);
-            const position = new Coordinate(10, 20);
+            const position = new Vector(10, 20);
 
             // When
             const planet = new Planet(position, config);
@@ -34,7 +34,7 @@ describe('Gravity', () => {
         let planet;
 
         beforeEach(() => {
-            const position = new Coordinate(10, 20);
+            const position = new Vector(10, 20);
             planet = new Planet(position, {});
         });
 

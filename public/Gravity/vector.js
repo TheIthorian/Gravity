@@ -38,10 +38,4 @@ class Vector {
     }
 }
 
-class Coordinate extends Vector {}
-
-class Velocity extends Vector {}
-
-class Force extends Vector {}
-
-export { Vector, Coordinate, Velocity, Force };
+export { Vector };
