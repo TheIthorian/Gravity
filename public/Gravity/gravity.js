@@ -47,6 +47,12 @@ export default class Gravity {
         this.colorHandler = new ColorHandler(this.planetColors);
     }
 
+    /**
+     * @param {float} beta Rotation around the x axis, represented in degrees. Value ranging from -180 (inclusive) to 180 (exclusive).
+     * This represents a front to back motion of the device.
+     * @param {float} gamma Rotation around the y axis, represented in degrees with values ranging from -90 (inclusive) to 90 (exclusive).
+     * This represents a left to right motion of the device.
+     */
     updateGravityDirection(beta, gamma) {
         const fy = Math.sin((beta * Math.PI) / 180);
         const fx = Math.sin((gamma * Math.PI) / 180) * (1 - fy);
@@ -133,6 +139,9 @@ export default class Gravity {
         }
     }
 
+    /**
+     * @param {HTMLElement} element The element for which rendering will be applied to.
+     */
     setElement(element) {
         this.element = element;
         this.dimensions = {
@@ -148,6 +157,9 @@ export default class Gravity {
         });
     }
 
+    /**
+     * @param {Planet} planet
+     */
     addPlanetToDom(planet) {
         const div = document.createElement('div');
         const child = document.createElement('div');
@@ -165,7 +177,7 @@ export default class Gravity {
     }
 
     /**
-     *
+     * Clears all annotations and adds the svg parent to the DOM.
      */
     _initAnnotations() {
         this.clearAnnotations();
@@ -178,14 +190,23 @@ export default class Gravity {
         this.annotationElm = annotationElm;
     }
 
+    /**
+     * Destorys all annotation DOM elements.
+     */
     clearAnnotations() {
         if (this.annotationElm) this.annotationElm.innerHTML = '';
     }
 
+    /**
+     * A single iteration through the simulation.
+     * Calculates acceleration and moves the planets a single step.
+     */
     step() {
         if (this.paused) return;
         for (let i = 0; i < this.planets.length; i++) {
             const planet = this.planets[i];
+
+            // Replace this with calculation callback?
             if (this.verticalGravity) {
                 planet.calculateVerticalForce(
                     this.gravity,
@@ -218,14 +239,20 @@ export default class Gravity {
         });
     }
 
+    /**
+     * Moves the planet's elements in the dom to match stored position
+     */
     updatePlanetDomPositions() {
-        // Move implementation to Planet.js
+        // Move implementation to Planet.js?
         this.planets.forEach(planet => {
             planet.div.style.left = planet.position.x + 'px';
             planet.div.style.top = -planet.position.y + 'px';
         });
     }
 
+    /**
+     * Moves annotations to match stored position of planets
+     */
     updateLinesBetweenPlanets() {
         if (!this.drawAnnotations || !this.drawLinesBetweenPlanets) {
             return;
@@ -242,6 +269,9 @@ export default class Gravity {
         }
     }
 
+    /**
+     * Destorys any planets outside the border
+     */
     removeOuterPlanets() {
         if (this.bordered) {
             const outOuterPlanets = [];
@@ -260,8 +290,8 @@ export default class Gravity {
     }
 
     /**
-     * Removes all annotations for a given planet index
-     * @param {int} index
+     * Removes all annotations for a given planet id
+     * @param {int} id
      */
     removePlanetAnnotationById(id) {
         const planet = this.planets.find(item => item.id == id);
@@ -311,6 +341,9 @@ export default class Gravity {
         this.paused = false;
     }
 
+    /**
+     * Recalculates the dimensions. Should be used if element is resized.
+     */
     resize() {
         this.dimensions = {
             height: this.element.clientHeight,
