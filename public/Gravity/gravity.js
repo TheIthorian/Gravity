@@ -110,8 +110,13 @@ export default class Gravity {
         this.minDisplacement = minDisplacement ?? this.minDisplacement;
     }
 
-    addPlanet(event) {
-        const planet = new Planet(new Vector(event.clientX, -event.clientY), {
+    /**
+     * Adds a planet to the DOM.
+     * @param {float} x X position
+     * @param {float} y Y position
+     */
+    addPlanet(x, y) {
+        const planet = new Planet(new Vector(x, -y), {
             color: this.colorHandler.getRandomColor(),
             randomDirection: this.randomDirection,
         });
@@ -139,7 +144,7 @@ export default class Gravity {
             : this.element.classList.remove('bordered');
         this._initAnnotations(element);
         this.element.addEventListener('click', event => {
-            this.addPlanet(event);
+            this.addPlanet(event.clientX, event.clientY);
         });
     }
 
