@@ -35,10 +35,6 @@ export class MotionDetector {
         window.dispatchEvent(windowMotion);
     }
 
-    handleWindowMotion(e) {
-        console.log('New position: ', e.detail);
-    }
-
     dispatchOrientation(event) {
         this.dispatchHandlers.forEach(handler => {
             if (handler.eventName == 'deviceorientation') {
