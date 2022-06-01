@@ -81,11 +81,10 @@ describe('Gravity', () => {
 
         it('creates a planet and adds it to the list of planets', () => {
             // Given
-            const event = { clientX: 10, clientY: 20 };
             gravity.colorHandler.getRandomColor = jest.fn(() => '#ffffff');
 
             // When
-            gravity.addPlanet(event);
+            gravity.addPlanet(10, 20);
 
             // Then
             expect(Planet).toHaveBeenCalledWith(new Vector(10, -20), {
@@ -135,7 +134,7 @@ describe('Gravity', () => {
             });
             expect(gravity.element.classList.contains('bordered')).toBe(false);
             expect(gravity._initAnnotations).toHaveBeenCalledTimes(1);
-            expect(gravity._initAnnotations).toHaveBeenCalledWith(element);
+            expect(gravity._initAnnotations).toHaveBeenCalled();
             expect(element.addEventListener).toHaveBeenCalledTimes(1);
         });
     });
@@ -188,10 +187,11 @@ describe('Gravity', () => {
             gravity.height = 200;
             const element = document.createElement('div');
             element.innerHTML = '<svg><svg>';
+            gravity.element = element;
             const ns = null;
 
             // When
-            gravity._initAnnotations(element);
+            gravity._initAnnotations();
             const annotationElm = gravity.annotationElm;
 
             // Then
