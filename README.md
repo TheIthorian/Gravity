@@ -30,13 +30,11 @@ This is an overview of the controls in our [example](https://theithorian.github.
 
 -   `Use Border?` > Adds a border around the edge of the window which particles will reflect off
 -   `Disable Gravity?` > No force calculations will be made to the particles
--   `Vertical Gravity?` > Particles will not interact with eachother.
-    -   On desktop, the particles will drop to the the ground.
-    -   On mobile, the particles will travel in a direction dependent on the device oritentation
+-   `Vertical Gravity?` > Particles will not interact with eachother. Only works on devices that support detecting device orientation. On mobile, the particles will travel in a direction dependent on the device oritentation.
 -   `Random Direction?` - Any new particales spawned will have a random direction and velocity.
 -   `Enable Annotations?` > Annotations will be visible and additional annotation options will be available.
 -   `Enable Lines Between Particles?` > Each particle will emit a line to every other plents. It makes for a cool effect!
--   ` Minimum Effective Gravity Displacement` > The distance to which any less displacement between particles has no more effect on the resultant force. Used to prevent "Black Holes".
+-   `Minimum Effective Gravity Displacement` > The distance to which any less displacement between particles has no more effect on the resultant force. Used to prevent "Black Holes".
 
 ### Shortcuts
 
