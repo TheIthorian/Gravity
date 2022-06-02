@@ -28,7 +28,7 @@ export default class Gravity {
     randomDirection = false; // Rename to randomVelocity
     particleColors = [];
     MIN_DISPLACEMENT = 50 ** 2;
-    particleRenderer = () => '';
+    particleRenderer;
 
     constructor(config, motionDetector) {
         this.config = config || {};
@@ -79,6 +79,7 @@ export default class Gravity {
             lineWidthBetweenParticles: this.lineWidthBetweenParticles,
             lineBetweenParticlesFade: this.lineBetweenParticlesFade,
             particleColors: this.particleColors,
+            particleRenderer: this.particleRenderer,
         };
     }
     set config(config) {
@@ -95,6 +96,7 @@ export default class Gravity {
             lineBetweenParticlesFade, // Not implemented
             particleColors,
             minDisplacement,
+            particleRenderer,
         } = config;
 
         this.bordered = enableBorder ?? this.bordered;
@@ -115,6 +117,7 @@ export default class Gravity {
 
         this.particleColors = particleColors ?? this.particleColors;
         this.minDisplacement = minDisplacement ?? this.minDisplacement;
+        this.particleRenderer = particleRenderer ?? this.particleRenderer;
     }
 
     /**
@@ -164,7 +167,7 @@ export default class Gravity {
     addParticleToDom(particle) {
         const div = document.createElement('div');
         const child = document.createElement('div');
-        child.innerHTML = this.particleRenderer();
+        child.innerHTML = this.particleRenderer ? this.particleRenderer(particle) : '';
         div.appendChild(child);
         div.classList.add('particle');
         div.style.position = 'absolute';
@@ -232,6 +235,8 @@ export default class Gravity {
                 dampingFactor: this.verticalGravity ? 0.8 : 1.0,
                 delta: this.verticalGravity ? 0 : null,
             });
+
+            this.reRenderParticle(particle);
         }
 
         this.updateParticleDomPositions();
@@ -240,6 +245,12 @@ export default class Gravity {
         window.requestAnimationFrame(() => {
             this.step();
         });
+    }
+
+    reRenderParticle(particle) {
+        if (this.particleRenderer) {
+            particle.div.children[0].innerHTML = this.particleRenderer(particle);
+        }
     }
 
     /**

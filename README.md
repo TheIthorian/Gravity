@@ -98,6 +98,14 @@ The `config` object determines how the interactions between particles will behav
 -   `enableDrawLinesBetweenParticles: boolean` - Each particle will emit a line to each other.
 -   `particleColors: string[]` - A list of hex colors. Each placed particle will take a random color from this list.
 -   `minDisplacement: float` - The distance (in px) to which any less displacement between particles has no more effect on the resultant force.
+-   `particleRenderer: function(particle)` - Takes the particle to be rendered. Should output a HTML node.
+    -   E.g.
+    ```
+    gravity.config.particleRenderer: particle =>
+        `<span style='color: white;'>
+            ${particle.position.x.toFixed()}, ${particle.position.y.toFixed()}
+        <\span>`
+    ```
 
 The `motionDetector` class contains additional functionality around detecting device motion and can be imported from `'Gravity/motionDetector.js'`. Instantiating this and passing to `Gravity()` will have the following effects:
 
