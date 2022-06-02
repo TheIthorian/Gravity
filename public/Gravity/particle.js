@@ -225,7 +225,7 @@ export default class Particle {
     }
 
     /**
-     * Removes all lines emmitting from this particle
+     * Removes all lines to this particle from another
      * @param {Particle} particle The particle from which the lines are coming from
      * @param {HTMLElement} svgElement The svg element of which to remove the lines from
      */
