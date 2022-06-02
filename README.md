@@ -35,7 +35,7 @@ This is an overview of the controls in our [example](https://theithorian.github.
     -   On mobile, the particles will travel in a direction dependent on the device oritentation
 -   `Random Direction?` - Any new particales spawned will have a random direction and velocity.
 -   `Enable Annotations?` > Annotations will be visible and additional annotation options will be available.
--   `Enable Lines Between Planets?` > Each particle will emit a line to every other plents. It makes for a cool effect!
+-   `Enable Lines Between Particles?` > Each particle will emit a line to every other plents. It makes for a cool effect!
 -   ` Minimum Effective Gravity Displacement` > The distance to which any less displacement between particles has no more effect on the resultant force. Used to prevent "Black Holes".
 
 ### Shortcuts
@@ -52,7 +52,7 @@ This is an overview of the controls in our [example](https://theithorian.github.
 
 To use this in your own projects, download the Gravity directory, and import from the `module.js` file. Create a new instance of the Gravity class and attach it to an element in the DOM. The element must have an `<svg>` child for the annotations to work correctly.
 
-In `index.html`: 
+In `index.html`:
 
 ```
 <!DOCTYPE html>
@@ -76,7 +76,7 @@ const myElement = document.getElementById('myElement');
 const gravity = new Gravity();
 
 // Attaches the instance with an element in the DOM
-gravity.setElement(myElement) 
+gravity.setElement(myElement)
 
 ...
 
@@ -91,12 +91,12 @@ The constructor takes two arguments: `config` and `motionDetector`.
 The `config` object determines how the interactions between particles will behave and how they are rendered to the dom. The following properties can be set:
 
 -   `enableBorder: boolean` - Enables the border around the container element.
--   `enableRandomPlanetDirection: boolean` - New particles will have a random direction.
+-   `enableRandomParticleDirection: boolean` - New particles will have a random direction.
 -   `disableGravity: boolean` - Particles will not interact with eachother.
 -   `enableVerticalGravity: boolean` - Particles will not interact with eachother but will vertically down.
 -   `enableDrawAnnotations: boolean` - Enables annotations.
--   `enableDrawLinesBetweenPlanets: boolean` - Each particle will emit a line to each other.
--   `planetColors: string[]` - A list of hex colors. Each placed particle will take a random color from this list.
+-   `enableDrawLinesBetweenParticles: boolean` - Each particle will emit a line to each other.
+-   `particleColors: string[]` - A list of hex colors. Each placed particle will take a random color from this list.
 -   `minDisplacement: float` - The distance (in px) to which any less displacement between particles has no more effect on the resultant force.
 
 The `motionDetector` class contains additional functionality around detecting device motion and can be imported from `'Gravity/motionDetector.js'`. Instantiating this and passing to `Gravity()` will have the following effects:
@@ -107,11 +107,11 @@ The `motionDetector` class contains additional functionality around detecting de
 #### Methods
 
 -   `setElement(element)` - Attaches the instance to an element in the DOM.
--   `addPlanet(x, y)` - Adds a particle to the DOM, at the position `(x, y)`.
--   `addPlanetToDom(planet)` - Adds a particle instance to the DOM associated with this instance.
+-   `addParticle(x, y)` - Adds a particle to the DOM, at the position `(x, y)`.
+-   `addParticleToDom(particle)` - Adds a particle instance to the DOM associated with this instance.
 -   `clearAnnotations()` - Removes all annotations.
 -   `step()` - Moves the simulation forward 1 step.
--   `removePlanetById(id)` - Removes a particle with the associated id from the insatnce.
+-   `removeParticleById(id)` - Removes a particle with the associated id from the insatnce.
 -   `pauseSim()` - Pauses the simulation. No more steps are made until the sim is resumes.
 -   `startSim()`- Starts the simulation again if it is paused.
 -   `reset()` - Removes all particles from the instance
@@ -129,6 +129,6 @@ The following methods change the current config:
 -   `toggleRandomDirection()`
 -   `toggleGravity()`
 -   `toggleAnnotations()`
--   `toggleLinesBetweenPlanets()`
+-   `toggleLinesBetweenParticles()`
 -   `changeMinimumDisplacement()`
 -   `toggleVerticalGravity()`

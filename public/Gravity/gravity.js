@@ -1,4 +1,4 @@
-import Planet from './planet.js';
+import Particle from './particle.js';
 import { Vector } from './vector.js';
 import { ColorHandler } from './util.js';
 
@@ -7,7 +7,7 @@ export default class Gravity {
     width;
     element; // Div to attach content to
     annotationElm; // Svg element to attach annotations to
-    planets;
+    particles;
 
     colorHandler;
 
@@ -20,15 +20,15 @@ export default class Gravity {
 
     //   annotations
     drawAnnotations = true;
-    drawLinesBetweenPlanets = false;
-    lineWidthBetweenPlanets = 2;
-    lineBetweenPlanetsFade = 0;
+    drawLinesBetweenParticles = false;
+    lineWidthBetweenParticles = 2;
+    lineBetweenParticlesFade = 0;
 
-    //   planets
+    //   particles
     randomDirection = false; // Rename to randomVelocity
-    planetColors = [];
+    particleColors = [];
     MIN_DISPLACEMENT = 50 ** 2;
-    planetRenderer = () => '';
+    particleRenderer = () => '';
 
     constructor(config, motionDetector) {
         this.config = config || {};
@@ -36,15 +36,15 @@ export default class Gravity {
         if (motionDetector) {
             this.motionDetector = motionDetector;
             this.motionDetector.on('windowMotion', e => {
-                this.updatePlanetWindowPositions(e.detail);
+                this.updateParticleWindowPositions(e.detail);
             });
             this.motionDetector.on('deviceorientation', e => {
                 this.updateGravityDirection(e.beta, e.gamma);
             });
         }
 
-        this.planets = [];
-        this.colorHandler = new ColorHandler(this.planetColors);
+        this.particles = [];
+        this.colorHandler = new ColorHandler(this.particleColors);
     }
 
     /**
@@ -71,14 +71,14 @@ export default class Gravity {
     get config() {
         return {
             enableBorder: this.bordered,
-            enableRandomPlanetDirection: this.randomDirection,
+            enableRandomParticleDirection: this.randomDirection,
             disableGravity: !this.gravity,
             enableVerticalGravity: this.verticalGravity,
             enableDrawAnnotations: this.drawAnnotations,
-            enableDrawLinesBetweenPlanets: this.drawLinesBetweenPlanets,
-            lineWidthBetweenPlanets: this.lineWidthBetweenPlanets,
-            lineBetweenPlanetsFade: this.lineBetweenPlanetsFade,
-            planetColors: this.planetColors,
+            enableDrawLinesBetweenParticles: this.drawLinesBetweenParticles,
+            lineWidthBetweenParticles: this.lineWidthBetweenParticles,
+            lineBetweenParticlesFade: this.lineBetweenParticlesFade,
+            particleColors: this.particleColors,
         };
     }
     set config(config) {
@@ -86,55 +86,56 @@ export default class Gravity {
 
         const {
             enableBorder,
-            enableRandomPlanetDirection,
+            enableRandomParticleDirection,
             disableGravity,
             enableVerticalGravity,
             enableDrawAnnotations,
-            enableDrawLinesBetweenPlanets,
-            lineWidthBetweenPlanets, // Not implemented
-            lineBetweenPlanetsFade, // Not implemented
-            planetColors,
+            enableDrawLinesBetweenParticles,
+            lineWidthBetweenParticles, // Not implemented
+            lineBetweenParticlesFade, // Not implemented
+            particleColors,
             minDisplacement,
         } = config;
 
         this.bordered = enableBorder ?? this.bordered;
 
-        this.randomDirection = enableRandomPlanetDirection ?? this.randomDirection;
+        this.randomDirection = enableRandomParticleDirection ?? this.randomDirection;
 
         this.gravity = !(disableGravity ?? !this.gravity);
         this.verticalGravity = enableVerticalGravity ?? this.verticalGravity;
         this.drawAnnotations = enableDrawAnnotations ?? this.drawAnnotations;
 
-        this.drawLinesBetweenPlanets =
-            enableDrawLinesBetweenPlanets ?? this.drawLinesBetweenPlanets;
+        this.drawLinesBetweenParticles =
+            enableDrawLinesBetweenParticles ?? this.drawLinesBetweenParticles;
 
-        this.lineWidthBetweenPlanets = lineWidthBetweenPlanets ?? this.lineWidthBetweenPlanets;
+        this.lineWidthBetweenParticles =
+            lineWidthBetweenParticles ?? this.lineWidthBetweenParticles;
 
-        this.lineBetweenPlanetsFade = lineBetweenPlanetsFade ?? this.lineBetweenPlanetsFade;
+        this.lineBetweenParticlesFade = lineBetweenParticlesFade ?? this.lineBetweenParticlesFade;
 
-        this.planetColors = planetColors ?? this.planetColors;
+        this.particleColors = particleColors ?? this.particleColors;
         this.minDisplacement = minDisplacement ?? this.minDisplacement;
     }
 
     /**
-     * Adds a planet to the DOM.
+     * Adds a particle to the DOM.
      * @param {float} x X position
      * @param {float} y Y position
      */
-    addPlanet(x, y) {
-        const planet = new Planet(new Vector(x, -y), {
+    addParticle(x, y) {
+        const particle = new Particle(new Vector(x, -y), {
             color: this.colorHandler.getRandomColor(),
             randomDirection: this.randomDirection,
         });
-        this.planets.push(planet);
-        this.addPlanetToDom(planet);
-        planet.addAnnotation(
-            this.planets,
+        this.particles.push(particle);
+        this.addParticleToDom(particle);
+        particle.addAnnotation(
+            this.particles,
             this.annotationElm,
-            this.drawLinesBetweenPlanets && this.drawAnnotations
+            this.drawLinesBetweenParticles && this.drawAnnotations
         );
 
-        if (this.planets.length == 1) {
+        if (this.particles.length == 1) {
             this.startSim();
         }
     }
@@ -153,26 +154,26 @@ export default class Gravity {
             : this.element.classList.remove('bordered');
         this._initAnnotations();
         this.element.addEventListener('click', event => {
-            this.addPlanet(event.clientX, event.clientY);
+            this.addParticle(event.clientX, event.clientY);
         });
     }
 
     /**
-     * @param {Planet} planet
+     * @param {Particle} particle
      */
-    addPlanetToDom(planet) {
+    addParticleToDom(particle) {
         const div = document.createElement('div');
         const child = document.createElement('div');
-        child.innerHTML = this.planetRenderer();
+        child.innerHTML = this.particleRenderer();
         div.appendChild(child);
-        div.classList.add('planet');
+        div.classList.add('particle');
         div.style.position = 'absolute';
-        div.style.left = planet.position.x + 'px';
-        div.style.top = -planet.position.y + 'px';
-        div.style.width = planet.radius * 2 + 'px';
-        div.style.height = planet.radius * 2 + 'px';
-        div.style.backgroundColor = planet.color;
-        planet.div = div;
+        div.style.left = particle.position.x + 'px';
+        div.style.top = -particle.position.y + 'px';
+        div.style.width = particle.radius * 2 + 'px';
+        div.style.height = particle.radius * 2 + 'px';
+        div.style.backgroundColor = particle.color;
+        particle.div = div;
         this.element.appendChild(div);
     }
 
@@ -201,30 +202,30 @@ export default class Gravity {
 
     /**
      * A single iteration through the simulation.
-     * Calculates acceleration and moves the planets a single step.
+     * Calculates acceleration and moves the particles a single step.
      */
     step() {
         if (this.paused) return;
-        for (let i = 0; i < this.planets.length; i++) {
-            const planet = this.planets[i];
+        for (let i = 0; i < this.particles.length; i++) {
+            const particle = this.particles[i];
 
             // Replace this with calculation callback?
             if (this.verticalGravity) {
-                planet.calculateVerticalForce(
+                particle.calculateVerticalForce(
                     this.gravity,
                     { ...this.dimensions },
                     this.verticalGravityVector
                 );
             } else {
-                planet.calculateForce(
-                    this.planets,
+                particle.calculateForce(
+                    this.particles,
                     this.gravity,
                     { ...this.dimensions },
                     this.MIN_DISPLACEMENT
                 );
             }
 
-            planet.step({
+            particle.step({
                 bordered: this.bordered,
                 height: this.height,
                 width: this.width,
@@ -233,8 +234,8 @@ export default class Gravity {
             });
         }
 
-        this.updatePlanetDomPositions();
-        this.updateLinesBetweenPlanets();
+        this.updateParticleDomPositions();
+        this.updateLinesBetweenParticles();
 
         window.requestAnimationFrame(() => {
             this.step();
@@ -242,84 +243,84 @@ export default class Gravity {
     }
 
     /**
-     * Moves the planet's elements in the dom to match stored position
+     * Moves the particle's elements in the dom to match stored position
      */
-    updatePlanetDomPositions() {
-        // Move implementation to Planet.js?
-        this.planets.forEach(planet => {
-            planet.div.style.left = planet.position.x + 'px';
-            planet.div.style.top = -planet.position.y + 'px';
+    updateParticleDomPositions() {
+        // Move implementation to Particle.js?
+        this.particles.forEach(particle => {
+            particle.div.style.left = particle.position.x + 'px';
+            particle.div.style.top = -particle.position.y + 'px';
         });
     }
 
     /**
-     * Moves annotations to match stored position of planets
+     * Moves annotations to match stored position of particles
      */
-    updateLinesBetweenPlanets() {
-        if (!this.drawAnnotations || !this.drawLinesBetweenPlanets) {
+    updateLinesBetweenParticles() {
+        if (!this.drawAnnotations || !this.drawLinesBetweenParticles) {
             return;
         }
 
-        for (let i = 0; i < this.planets.length; i++) {
-            const planet = this.planets[i];
+        for (let i = 0; i < this.particles.length; i++) {
+            const particle = this.particles[i];
 
-            for (let j = 0; j < this.planets.length; j++) {
+            for (let j = 0; j < this.particles.length; j++) {
                 if (j >= i) continue;
-                const otherPlanet = this.planets[j];
-                planet.updateLineToPlanet(otherPlanet);
+                const otherParticle = this.particles[j];
+                particle.updateLineToParticle(otherParticle);
             }
         }
     }
 
     /**
-     * Destorys any planets outside the border
+     * Destorys any particles outside the border
      */
-    removeOuterPlanets() {
+    removeOuterParticles() {
         if (this.bordered) {
-            const outOuterPlanets = [];
-            this.planets.forEach(planet => {
-                if (!planet.isWithinBounds(this.height, this.width)) {
-                    outOuterPlanets.push(planet);
+            const outOuterParticles = [];
+            this.particles.forEach(particle => {
+                if (!particle.isWithinBounds(this.height, this.width)) {
+                    outOuterParticles.push(particle);
                 }
             });
-            outOuterPlanets.forEach(planet => {
-                this.removePlanetAnnotationById(planet.id);
+            outOuterParticles.forEach(particle => {
+                this.removeParticleAnnotationById(particle.id);
             });
-            outOuterPlanets.forEach(planet => {
-                this.removePlanetById(planet.id);
+            outOuterParticles.forEach(particle => {
+                this.removeParticleById(particle.id);
             });
         }
     }
 
     /**
-     * Removes all annotations for a given planet id
+     * Removes all annotations for a given particle id
      * @param {int} id
      */
-    removePlanetAnnotationById(id) {
-        const planet = this.planets.find(item => item.id == id);
-        planet.removeLinesFromPlanet(this.annotationElm);
+    removeParticleAnnotationById(id) {
+        const particle = this.particles.find(item => item.id == id);
+        particle.removeLinesFromParticle(this.annotationElm);
 
-        this.planets.forEach(otherPlanet => {
-            if (planet.id != otherPlanet.id) {
-                planet.removeLinesToPlanet(otherPlanet, this.annotationElm);
+        this.particles.forEach(otherParticle => {
+            if (particle.id != otherParticle.id) {
+                particle.removeLinesToParticle(otherParticle, this.annotationElm);
             }
         });
     }
 
-    removePlanetById(id) {
-        const index = this.planets.map(x => x.id).indexOf(id);
-        const planet = this.planets[index];
-        this.element.removeChild(planet.div);
-        this.planets.splice(index, 1);
+    removeParticleById(id) {
+        const index = this.particles.map(x => x.id).indexOf(id);
+        const particle = this.particles[index];
+        this.element.removeChild(particle.div);
+        this.particles.splice(index, 1);
     }
 
-    updatePlanetWindowPositions(detail) {
+    updateParticleWindowPositions(detail) {
         if (!detail) return;
         const { oldWindowPosition, newWindowPosition } = detail;
-        this.planets.forEach(planet => {
-            planet.updateWindowPosition(oldWindowPosition, newWindowPosition);
+        this.particles.forEach(particle => {
+            particle.updateWindowPosition(oldWindowPosition, newWindowPosition);
         });
-        this.updatePlanetDomPositions();
+        this.updateParticleDomPositions();
     }
 
     // Instance controls
@@ -335,10 +336,10 @@ export default class Gravity {
     }
 
     reset() {
-        this.planets.forEach(planet => {
-            this.element.removeChild(planet.div);
+        this.particles.forEach(particle => {
+            this.element.removeChild(particle.div);
         });
-        this.planets = [];
+        this.particles = [];
         this._initAnnotations();
         this.paused = false;
     }
@@ -361,7 +362,7 @@ export default class Gravity {
         this.bordered
             ? this.element.classList.add('bordered')
             : this.element.classList.remove('bordered');
-        if (this.bordered) this.removeOuterPlanets();
+        if (this.bordered) this.removeOuterParticles();
     }
 
     toggleRandomDirection() {
@@ -378,11 +379,11 @@ export default class Gravity {
         if (this.annotationElm) this.annotationElm.style.display = display;
     }
 
-    toggleLinesBetweenPlanets() {
-        this.drawLinesBetweenPlanets = !this.drawLinesBetweenPlanets;
-        const display = this.drawLinesBetweenPlanets ? '' : 'none';
-        this.planets.forEach(planet => {
-            for (const line of Object.values(planet.lines)) {
+    toggleLinesBetweenParticles() {
+        this.drawLinesBetweenParticles = !this.drawLinesBetweenParticles;
+        const display = this.drawLinesBetweenParticles ? '' : 'none';
+        this.particles.forEach(particle => {
+            for (const line of Object.values(particle.lines)) {
                 line.style.display = display;
             }
         });

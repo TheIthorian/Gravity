@@ -17,14 +17,14 @@ export class ConfigStore extends Store {
         if (!config) return {};
         return {
             enableBorder: config['use-border'],
-            enableRandomPlanetDirection: config['random-direction'],
+            enableRandomParticleDirection: config['random-direction'],
             disableGravity: config['disable-gravity'],
             enableVerticalGravity: config['vertical-gravity'],
             enableDrawAnnotations: config['enable-draw-annotations'],
-            enableDrawLinesBetweenPlanets: config['enable-draw-lines-between-planets'],
-            // lineWidthBetweenPlanets: undefined, // Not implemented
-            // lineBetweenPlanetsFade: undefined,  // Not implemented
-            // planetColors: undefined,            // Not implemented
+            enableDrawLinesBetweenParticles: config['enable-draw-lines-between-particles'],
+            // lineWidthBetweenParticles: undefined, // Not implemented
+            // lineBetweenParticlesFade: undefined,  // Not implemented
+            // particleColors: undefined,            // Not implemented
             minDisplacement: parseInt(config['min-displacement']),
         };
     }

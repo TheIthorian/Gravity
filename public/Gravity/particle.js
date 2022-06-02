@@ -2,8 +2,8 @@ import { BORDER_WIDTH, G, MAX_STARTING_VELOCITY, STEP_TIME } from './constants.j
 import { Vector } from './vector.js';
 import { addSvgLineFromVectors, updateSvgLineFromVectors } from './svg.js';
 
-const DEFAULT_PLANET_RADIUS = 5;
-const DEFAULT_PLANET_COLOR = '#ffffff';
+const DEFAULT_PARTICLE_RADIUS = 5;
+const DEFAULT_PARTICLE_COLOR = '#ffffff';
 
 const idGen = (function* () {
     let id = 1;
@@ -16,7 +16,7 @@ function nextId() {
     return idGen.next().value;
 }
 
-export default class Planet {
+export default class Particle {
     id;
     div;
 
@@ -29,8 +29,8 @@ export default class Planet {
     lines = {};
 
     // Config
-    color = DEFAULT_PLANET_COLOR;
-    radius = DEFAULT_PLANET_RADIUS;
+    color = DEFAULT_PARTICLE_COLOR;
+    radius = DEFAULT_PARTICLE_RADIUS;
     randomDirection = false;
 
     constructor(position, config = {}, startingVelocity = new Vector(0, 0)) {
@@ -69,13 +69,13 @@ export default class Planet {
     }
 
     /**
-     * Updates the instance's force vector from interactions with other planets.
-     * @param {Planet[]} planets All other planets to consider in the calculation
+     * Updates the instance's force vector from interactions with other particles.
+     * @param {Particle[]} particles All other particles to consider in the calculation
      * @param {Boolean} gravity Whether gravity is enabled
      * @param {{int, int}} dimensions The effective border
-     * @param {int} minDisplacement Minimum distance between planets at which the calculation will be considered
+     * @param {int} minDisplacement Minimum distance between particles at which the calculation will be considered
      */
-    calculateForce(planets, gravity, { height, width }, minDisplacement) {
+    calculateForce(particles, gravity, { height, width }, minDisplacement) {
         let resultantForce = new Vector(0, 0);
 
         if (!gravity) {
@@ -83,17 +83,17 @@ export default class Planet {
             return;
         }
 
-        for (let i = 0; i < planets.length; i++) {
-            const otherPlanet = planets[i];
-            const isOtherInBounds = otherPlanet.isWithinBounds(height, width);
+        for (let i = 0; i < particles.length; i++) {
+            const otherParticle = particles[i];
+            const isOtherInBounds = otherParticle.isWithinBounds(height, width);
             const isInBounds = this.isWithinBounds(height, width);
 
-            if (otherPlanet.id != this.id && isOtherInBounds && isInBounds) {
-                const displacement = this.findDisplacement(otherPlanet);
+            if (otherParticle.id != this.id && isOtherInBounds && isInBounds) {
+                const displacement = this.findDisplacement(otherParticle);
                 const distance2 = Math.max(displacement.mod2(), minDisplacement);
                 const unitVector = displacement.findUnitVector();
 
-                const force = unitVector.multiply((G * otherPlanet.mass) / distance2);
+                const force = unitVector.multiply((G * otherParticle.mass) / distance2);
                 resultantForce = resultantForce.add(force);
             }
         }
@@ -122,7 +122,7 @@ export default class Planet {
     }
 
     /**
-     * Updates the planet's position and velocity from its resultant force.
+     * Updates the particle's position and velocity from its resultant force.
      * @param {{boolean, int, int, double, double}} options
      */
     step({ bordered, height, width, dampingFactor, delta }) {
@@ -138,11 +138,11 @@ export default class Planet {
 
     /**
      *
-     * @param {Planet} otherPlanet
-     * @returns {Vector} The displacement from another planet
+     * @param {Particle} otherParticle
+     * @returns {Vector} The displacement from another particle
      */
-    findDisplacement(otherPlanet) {
-        const displacement = this.position.findDisplacement(otherPlanet.position);
+    findDisplacement(otherParticle) {
+        const displacement = this.position.findDisplacement(otherParticle.position);
         return displacement;
     }
 
@@ -189,35 +189,35 @@ export default class Planet {
     }
 
     /**
-     * @param {Planet[]} planetList All other planets
+     * @param {Particle[]} particleList All other particles
      * @param {HTMLElement} svgElement The svg element to which annotations will be drawn to
-     * @param {boolean} drawLinesBetweenPlanets
+     * @param {boolean} drawLinesBetweenParticles
      */
-    addAnnotation(planetList, svgElement, drawLinesBetweenPlanets) {
-        for (let i = 0; i < planetList.length; i++) {
-            const planet = planetList[i];
-            if (planet.id != this.id) {
-                const line = this.addLineToOtherPlanet(planet, svgElement);
-                line.style.display = drawLinesBetweenPlanets ? null : 'none';
-                this.lines[planet.id] = line;
+    addAnnotation(particleList, svgElement, drawLinesBetweenParticles) {
+        for (let i = 0; i < particleList.length; i++) {
+            const particle = particleList[i];
+            if (particle.id != this.id) {
+                const line = this.addLineToOtherParticle(particle, svgElement);
+                line.style.display = drawLinesBetweenParticles ? null : 'none';
+                this.lines[particle.id] = line;
             }
         }
     }
 
     /**
-     * @param {Planet} planet
+     * @param {Particle} particle
      * @param {HTMLElement} svgElement The svg element to which annotations will be drawn to
      * @returns {HTMLElement} Line which was added to the svgElement
      */
-    addLineToOtherPlanet(planet, svgElement) {
-        return addSvgLineFromVectors(this.position, planet.position, svgElement);
+    addLineToOtherParticle(particle, svgElement) {
+        return addSvgLineFromVectors(this.position, particle.position, svgElement);
     }
 
     /**
-     * Removes all lines emmitting from this planet
+     * Removes all lines emmitting from this particle
      * @param {HTMLElement} svgElement The svg element of which to remove the lines from
      */
-    removeLinesFromPlanet(svgElement) {
+    removeLinesFromParticle(svgElement) {
         Object.values(this.lines).forEach(line => {
             svgElement?.removeChild(line);
         });
@@ -225,27 +225,27 @@ export default class Planet {
     }
 
     /**
-     * Removes all lines emmitting from this planet
-     * @param {Planet} planet The planet from which the lines are coming from
+     * Removes all lines emmitting from this particle
+     * @param {Particle} particle The particle from which the lines are coming from
      * @param {HTMLElement} svgElement The svg element of which to remove the lines from
      */
-    removeLinesToPlanet(planet, svgElement) {
-        const line = planet.lines[this.id];
+    removeLinesToParticle(particle, svgElement) {
+        const line = particle.lines[this.id];
         if (line) svgElement?.removeChild(line);
-        delete planet.lines[this.id];
+        delete particle.lines[this.id];
     }
 
     /**
-     * Updates the line positions to match the planets' current position
-     * @param {Planet} planet
+     * Updates the line positions to match the particles' current position
+     * @param {Particle} particle
      */
-    updateLineToPlanet(planet) {
-        const line = this.lines[planet.id];
-        if (line) updateSvgLineFromVectors(this.position, planet.position, line);
+    updateLineToParticle(particle) {
+        const line = this.lines[particle.id];
+        if (line) updateSvgLineFromVectors(this.position, particle.position, line);
     }
 
     /**
-     * Updates the planet's relative position to the window given a change in window position,
+     * Updates the particle's relative position to the window given a change in window position,
      * such that the absolute screen position remains the same
      * @param {{double, double}} oldWindowPosition
      * @param {{double, double}} newWindowPosition

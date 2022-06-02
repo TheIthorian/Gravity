@@ -9,7 +9,7 @@ const OPTIONS = [
         id: 'enable-draw-annotations',
         action: 'toggleAnnotations',
         additionalAction: () => {
-            ['enable-draw-lines-between-planets-group'].forEach(id => {
+            ['enable-draw-lines-between-particles-group'].forEach(id => {
                 const visible = document.getElementById('enable-draw-annotations').checked;
                 const option = document.getElementById(id);
                 visible ? option.classList.remove('hidden') : option.classList.add('hidden');
@@ -17,8 +17,8 @@ const OPTIONS = [
         },
     },
     {
-        id: 'enable-draw-lines-between-planets',
-        action: 'toggleLinesBetweenPlanets',
+        id: 'enable-draw-lines-between-particles',
+        action: 'toggleLinesBetweenParticles',
     },
     { id: 'min-displacement', action: 'changeMinimumDisplacement' },
 ];
@@ -57,7 +57,7 @@ function setStoredConfigValues() {
         }
 
         if (option.id === 'enable-draw-annotations') {
-            const optionElm = document.getElementById('enable-draw-lines-between-planets-group');
+            const optionElm = document.getElementById('enable-draw-lines-between-particles-group');
             option.checked
                 ? optionElm.classList.remove('hidden')
                 : optionElm.classList.add('hidden');
@@ -173,7 +173,7 @@ function setupHotkeys(gravity) {
         KeyR: () => reset(gravity),
         KeyD: toggleDebug,
         Space: () =>
-            gravity.addPlanet(
+            gravity.addParticle(
                 Math.random() * window.innerWidth,
                 Math.random() * window.innerHeight
             ),

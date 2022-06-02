@@ -9,7 +9,7 @@ const motionDetector = new MotionDetector();
 
 const gravity = new Gravity(
     {
-        planetColors: COLORS,
+        particleColors: COLORS,
         ...configStore.getForGravity(),
     },
     motionDetector

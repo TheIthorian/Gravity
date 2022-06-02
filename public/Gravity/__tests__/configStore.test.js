@@ -18,7 +18,7 @@ describe('ConfigStore', () => {
                 'disable-gravity': true,
                 'vertical-gravity': true,
                 'enable-draw-annotations': true,
-                'enable-draw-lines-between-planets': true,
+                'enable-draw-lines-between-particles': true,
                 'min-displacement': '100',
             });
 
@@ -28,11 +28,11 @@ describe('ConfigStore', () => {
             // Then
             expect(config).toStrictEqual({
                 enableBorder: true,
-                enableRandomPlanetDirection: true,
+                enableRandomParticleDirection: true,
                 disableGravity: true,
                 enableVerticalGravity: true,
                 enableDrawAnnotations: true,
-                enableDrawLinesBetweenPlanets: true,
+                enableDrawLinesBetweenParticles: true,
                 minDisplacement: 100,
             });
         });

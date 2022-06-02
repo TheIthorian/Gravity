@@ -1,4 +1,4 @@
-import Planet from '../planet.js';
+import Particle from '../particle.js';
 import { Vector } from '../vector.js';
 import { MAX_STARTING_VELOCITY } from '../constants';
 
@@ -17,23 +17,23 @@ describe('Gravity', () => {
             const position = new Vector(10, 20);
 
             // When
-            const planet = new Planet(position, config);
+            const particle = new Particle(position, config);
 
             // Then
-            expect(planet.id).toBe(1);
-            expect(planet.position).toEqual(position);
-            expect(planet.velocity.x).toBeCloseTo(0.3 * MAX_STARTING_VELOCITY);
-            expect(planet.velocity.y).toBeCloseTo(0.3 * MAX_STARTING_VELOCITY);
+            expect(particle.id).toBe(1);
+            expect(particle.position).toEqual(position);
+            expect(particle.velocity.x).toBeCloseTo(0.3 * MAX_STARTING_VELOCITY);
+            expect(particle.velocity.y).toBeCloseTo(0.3 * MAX_STARTING_VELOCITY);
             expect(global.Math.random).toHaveBeenCalledTimes(2);
         });
     });
 
     describe('config', () => {
-        let planet;
+        let particle;
 
         beforeEach(() => {
             const position = new Vector(10, 20);
-            planet = new Planet(position, {});
+            particle = new Particle(position, {});
         });
 
         it('sets the config', () => {
@@ -45,12 +45,12 @@ describe('Gravity', () => {
             };
 
             // When
-            planet.config = config;
+            particle.config = config;
 
             // Then
-            expect(planet.color).toBe('#ffffff');
-            expect(planet.randomDirection).toBe(true);
-            expect(planet.radius).toBe(10);
+            expect(particle.color).toBe('#ffffff');
+            expect(particle.randomDirection).toBe(true);
+            expect(particle.radius).toBe(10);
         });
 
         it('only sets valid config', () => {
@@ -62,8 +62,8 @@ describe('Gravity', () => {
             };
 
             // When
-            planet.config = config;
-            planet.config = {};
+            particle.config = config;
+            particle.config = {};
 
             // Then
             expect(config.color).toBe('#ffffff');
@@ -73,12 +73,12 @@ describe('Gravity', () => {
 
         it('gets the config', () => {
             // Given
-            planet.randomDirection = false;
-            planet.color = '#aaaaaa';
-            planet.radius = 10;
+            particle.randomDirection = false;
+            particle.color = '#aaaaaa';
+            particle.radius = 10;
 
             // When
-            const config = planet.config;
+            const config = particle.config;
 
             // Then
             expect(config.color).toBe('#aaaaaa');
