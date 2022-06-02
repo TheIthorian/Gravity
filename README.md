@@ -84,6 +84,8 @@ gravity.setElement(myElement)
 
 In this example, now when `myElement` is clicked, a new particle is created and the simultation will start.
 
+---
+
 ### Gravity class
 
 The constructor takes two arguments: `config` and `motionDetector`.
@@ -140,3 +142,23 @@ The following methods change the current config:
 -   `toggleLinesBetweenParticles()`
 -   `changeMinimumDisplacement()`
 -   `toggleVerticalGravity()`
+
+---
+
+### Particle Class
+
+Particles have the following properties:
+
+- `id` - Unique id.
+- `div` - The DOM element linked to the particle.
+- `position` - Vector position (x, y coordinates).
+- `velocity` - Vector velocity.
+- `lines` - A map particle ids to svg line elements representing the lines emitted from this particle.
+- `radius` - Particle's effective radius. Used when calculating collisions.
+- `mass` - Read only. Relative to the particle's radius. Determines the effect on other particles.
+
+#### Methods
+
+- `isWithinBounds(height, width)` - Returns true if the particle's position is within the given bounds.
+- `removeLinesFromParticle(svgElement)` - Removes all lines from this particle.
+- `removeLinesToParticle(particle, svgElement)` - Removes all lines coming to this particle from another given particle.
