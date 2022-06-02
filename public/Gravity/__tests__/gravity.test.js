@@ -59,6 +59,7 @@ describe('Gravity', () => {
                 lineWidthBetweenParticles: true,
                 lineBetweenParticlesFade: true,
                 particleColors: [],
+                particleRenderer: undefined,
             };
             const gravity = new Gravity(initialConfig);
 
@@ -143,7 +144,7 @@ describe('Gravity', () => {
         let gravity;
 
         beforeEach(() => {
-            gravity = new Gravity({ bordered: false });
+            gravity = new Gravity({ bordered: false, particleRenderer: jest.fn() });
             jest.spyOn(gravity, 'particleRenderer').mockImplementation(() => {});
             jest.spyOn(document, 'createTextNode');
         });
