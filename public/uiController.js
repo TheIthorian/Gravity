@@ -1,9 +1,9 @@
+import interactions from './Gravity/interactions.js';
 import { Store } from './Gravity/store.js';
 
 const OPTIONS = [
     { id: 'use-border', action: 'toggleBorder' },
     { id: 'disable-gravity', action: 'toggleGravity' },
-    { id: 'vertical-gravity', action: 'toggleVerticalGravity' },
     { id: 'random-direction', action: 'toggleRandomDirection' },
     {
         id: 'enable-draw-annotations',
@@ -34,7 +34,7 @@ export default function UI(gravity) {
         // Add event handlers to UI control
         hookControlButtons(gravity);
         hookAdditionalOptions(gravity);
-        setStoredConfigValues();
+        setStoredConfigValues(gravity);
         setupLogger();
         setupHotkeys(gravity);
     });
@@ -44,7 +44,7 @@ export default function UI(gravity) {
     });
 }
 
-function setStoredConfigValues() {
+function setStoredConfigValues(gravity) {
     const config = configStore.getAll();
     if (!config) return;
 
@@ -62,6 +62,9 @@ function setStoredConfigValues() {
                 ? optionElm.classList.remove('hidden')
                 : optionElm.classList.add('hidden');
         }
+        if (item[0] === 'vertical-gravity') {
+            setVerticalGravity(gravity, item[1]);
+        }
     });
 }
 
@@ -76,7 +79,7 @@ function hookAdditionalOptions(gravity) {
         const fn = option.action;
         const optionElm = document.getElementById(option.id);
         optionElm.addEventListener('change', e => {
-            gravity[fn](e);
+            gravity[fn]?.(e);
             configStore.set(
                 option.id,
                 e.target.type === 'checkbox' ? e.target.checked : e.target.value
@@ -89,6 +92,26 @@ function hookAdditionalOptions(gravity) {
             });
         }
     });
+
+    // More options:
+    const optionElm = document.getElementById('vertical-gravity');
+    optionElm.addEventListener('change', e => {
+        setVerticalGravity(gravity, e.target.checked);
+        configStore.set('vertical-gravity', e.target.checked);
+        console.log('config', configStore.getAll());
+    });
+}
+
+function setVerticalGravity(gravity, enabled = false) {
+    if (enabled) {
+        gravity.interactionCalculator = interactions.calculateVerticalForce;
+        gravity.dampingFactor = 0.8;
+        gravity.delta = 0;
+    } else {
+        gravity.interactionCalculator = interactions.gravitationalEuler;
+        gravity.dampingFactor = 1;
+        gravity.delta = null;
+    }
 }
 
 function toggleDisplayAdditionalOptionsMenu() {

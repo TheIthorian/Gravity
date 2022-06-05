@@ -74,7 +74,6 @@ export default class Gravity {
             enableBorder: this.bordered,
             enableRandomParticleDirection: this.randomDirection,
             disableGravity: !this.gravity,
-            enableVerticalGravity: this.verticalGravity,
             interactionCalculator: this.interactionCalculator,
             enableDrawAnnotations: this.drawAnnotations,
             enableDrawLinesBetweenParticles: this.drawLinesBetweenParticles,
@@ -91,7 +90,6 @@ export default class Gravity {
             enableBorder,
             enableRandomParticleDirection,
             disableGravity,
-            enableVerticalGravity,
             interactionCalculator,
             enableDrawAnnotations,
             enableDrawLinesBetweenParticles,
@@ -107,7 +105,6 @@ export default class Gravity {
         this.randomDirection = enableRandomParticleDirection ?? this.randomDirection;
 
         this.gravity = !(disableGravity ?? !this.gravity);
-        this.verticalGravity = enableVerticalGravity ?? this.verticalGravity;
         this.interactionCalculator = interactionCalculator ?? this.interactionCalculator;
         this.drawAnnotations = enableDrawAnnotations ?? this.drawAnnotations;
 
@@ -223,8 +220,8 @@ export default class Gravity {
                 bordered: this.bordered,
                 height: this.height,
                 width: this.width,
-                dampingFactor: this.verticalGravity ? 0.8 : 1.0,
-                delta: this.verticalGravity ? 0 : null,
+                dampingFactor: this.dampingFactor ?? 1.0,
+                delta: this.delta ?? 0,
             });
 
             this.reRenderParticle(particle);
@@ -394,12 +391,5 @@ export default class Gravity {
     changeMinimumDisplacement(e) {
         const val = e.target.value;
         this.MIN_DISPLACEMENT = val ** 2;
-    }
-
-    toggleVerticalGravity() {
-        this.verticalGravity = !this.verticalGravity;
-        this.interactionCalculator = this.verticalGravity
-            ? interactions.calculateVerticalForce
-            : interactions.gravitationalEuler;
     }
 }
