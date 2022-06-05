@@ -45,7 +45,7 @@ function calculateVerticalForce(particle, gravity) {
     particle.resultantForce = gravity.verticalGravityVector.multiply(0.5);
 }
 
-export default Object.freeze({
+export default {
     gravitationalEuler,
     calculateVerticalForce,
-});
+};
