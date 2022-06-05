@@ -22,9 +22,9 @@ Simple interactive particle simulator.
 This is an overview of the controls in our [example](https://theithorian.github.io/Gravity/):
 
 -   Click or tap anywhere to add a particle.
--   Click `Pause` / `Start` to pause or start the simulation
--   Click `Reset` to remove all particles
--   Click `Show additional options` to expand the additional option menu
+-   Click `Pause` / `Start` to pause or start the simulation.
+-   Click `Reset` to remove all particles.
+-   Click `Show additional options` to expand the additional option menu.
 
 ### Additional Options
 
@@ -36,7 +36,7 @@ This is an overview of the controls in our [example](https://theithorian.github.
 -   `Random Direction?` - Any new particales spawned will have a random direction and velocity.
 -   `Enable Annotations?` > Annotations will be visible and additional annotation options will be available.
 -   `Enable Lines Between Particles?` > Each particle will emit a line to every other plents. It makes for a cool effect!
--   `Minimum Effective Gravity Displacement` > The distance to which any less displacement between particles has no more effect on the resultant force. Used to prevent "Black Holes".
+-   `Minimum Effective Gravity Displacement` > The distance to which any less displacement between particles has no more effect on the resultant force. Used to prevent infinite acceleration when particles get too close.
 
 ### Shortcuts
 
@@ -149,16 +149,16 @@ The following methods change the current config:
 
 Particles have the following properties:
 
-- `id` - Unique id.
-- `div` - The DOM element linked to the particle.
-- `position` - Vector position (x, y coordinates).
-- `velocity` - Vector velocity.
-- `lines` - A map particle ids to svg line elements representing the lines emitted from this particle.
-- `radius` - Particle's effective radius. Used when calculating collisions.
-- `mass` - Read only. Relative to the particle's radius. Determines the effect on other particles.
+-   `id` - Unique id.
+-   `div` - The DOM element linked to the particle.
+-   `position` - Vector position (x, y coordinates).
+-   `velocity` - Vector velocity.
+-   `lines` - A map particle ids to svg line elements representing the lines emitted from this particle.
+-   `radius` - Particle's effective radius. Used when calculating collisions.
+-   `mass` - Read only. Relative to the particle's radius. Determines the effect on other particles.
 
 #### Methods
 
-- `isWithinBounds(height, width)` - Returns true if the particle's position is within the given bounds.
-- `removeLinesFromParticle(svgElement)` - Removes all lines from this particle.
-- `removeLinesToParticle(particle, svgElement)` - Removes all lines coming to this particle from another given particle.
+-   `isWithinBounds(height, width)` - Returns true if the particle's position is within the given bounds.
+-   `removeLinesFromParticle(svgElement)` - Removes all lines from this particle.
+-   `removeLinesToParticle(particle, svgElement)` - Removes all lines coming to this particle from another given particle.
