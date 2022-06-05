@@ -20,7 +20,7 @@ const OPTIONS = [
         id: 'enable-draw-lines-between-particles',
         action: 'toggleLinesBetweenParticles',
     },
-    { id: 'min-displacement', action: 'changeMinimumDisplacement' },
+    // { id: 'min-displacement', action: 'changeMinimumDisplacement' },
 ];
 
 const configStore = new Store('gravityConfig');
