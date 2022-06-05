@@ -1,6 +1,7 @@
 import Particle from './particle.js';
 import { Vector } from './vector.js';
 import { ColorHandler } from './util.js';
+import interactions from './interactions.js';
 
 export default class Gravity {
     height;
@@ -17,6 +18,7 @@ export default class Gravity {
     gravity = true;
     verticalGravity = false;
     verticalGravityVector = new Vector(0, -1);
+    interactionCalculator = interactions.gravitationalEuler;
 
     //   annotations
     drawAnnotations = true;
@@ -56,7 +58,6 @@ export default class Gravity {
     updateGravityDirection(beta, gamma) {
         const fy = Math.sin((beta * Math.PI) / 180);
         const fx = Math.sin((gamma * Math.PI) / 180) * (1 - fy);
-        console.log(fx, fy);
         this.verticalGravityVector = new Vector(fx, -fy);
     }
 
@@ -74,6 +75,7 @@ export default class Gravity {
             enableRandomParticleDirection: this.randomDirection,
             disableGravity: !this.gravity,
             enableVerticalGravity: this.verticalGravity,
+            interactionCalculator: this.interactionCalculator,
             enableDrawAnnotations: this.drawAnnotations,
             enableDrawLinesBetweenParticles: this.drawLinesBetweenParticles,
             lineWidthBetweenParticles: this.lineWidthBetweenParticles,
@@ -90,6 +92,7 @@ export default class Gravity {
             enableRandomParticleDirection,
             disableGravity,
             enableVerticalGravity,
+            interactionCalculator,
             enableDrawAnnotations,
             enableDrawLinesBetweenParticles,
             lineWidthBetweenParticles, // Not implemented
@@ -105,6 +108,7 @@ export default class Gravity {
 
         this.gravity = !(disableGravity ?? !this.gravity);
         this.verticalGravity = enableVerticalGravity ?? this.verticalGravity;
+        this.interactionCalculator = interactionCalculator ?? this.interactionCalculator;
         this.drawAnnotations = enableDrawAnnotations ?? this.drawAnnotations;
 
         this.drawLinesBetweenParticles =
@@ -213,20 +217,7 @@ export default class Gravity {
             const particle = this.particles[i];
 
             // Replace this with calculation callback?
-            if (this.verticalGravity) {
-                particle.calculateVerticalForce(
-                    this.gravity,
-                    { ...this.dimensions },
-                    this.verticalGravityVector
-                );
-            } else {
-                particle.calculateForce(
-                    this.particles,
-                    this.gravity,
-                    { ...this.dimensions },
-                    this.MIN_DISPLACEMENT
-                );
-            }
+            this.interactionCalculator(particle, this);
 
             particle.step({
                 bordered: this.bordered,
@@ -407,5 +398,8 @@ export default class Gravity {
 
     toggleVerticalGravity() {
         this.verticalGravity = !this.verticalGravity;
+        this.interactionCalculator = this.verticalGravity
+            ? interactions.calculateVerticalForce
+            : interactions.gravitationalEuler;
     }
 }
