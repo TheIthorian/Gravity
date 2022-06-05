@@ -16,7 +16,6 @@ export default class Gravity {
     //   simulation
     bordered = false;
     gravity = true;
-    verticalGravity = false;
     verticalGravityVector = new Vector(0, -1);
     interactionCalculator = interactions.gravitationalEuler;
 
