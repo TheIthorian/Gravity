@@ -95,7 +95,7 @@ The `config` object determines how the interactions between particles will behav
 -   `enableBorder: boolean` - Enables the border around the container element.
 -   `enableRandomParticleDirection: boolean` - New particles will have a random direction.
 -   `disableGravity: boolean` - Particles will not interact with eachother.
--   `enableVerticalGravity: boolean` - Particles will not interact with eachother but will vertically down.
+-   `interactionCalculator: function(particle, gravity)` - Called each step of the simulation. Mutates the given particle to update its position, velocity and resultant force to make the interaction.
 -   `enableDrawAnnotations: boolean` - Enables annotations.
 -   `enableDrawLinesBetweenParticles: boolean` - Each particle will emit a line to each other.
 -   `particleColors: string[]` - A list of hex colors. Each placed particle will take a random color from this list.
@@ -141,7 +141,6 @@ The following methods change the current config:
 -   `toggleAnnotations()`
 -   `toggleLinesBetweenParticles()`
 -   `changeMinimumDisplacement()`
--   `toggleVerticalGravity()`
 
 ---
 
