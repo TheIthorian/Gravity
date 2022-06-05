@@ -100,7 +100,7 @@ The `config` object determines how the interactions between particles will behav
 -   `enableDrawLinesBetweenParticles: boolean` - Each particle will emit a line to each other.
 -   `particleColors: string[]` - A list of hex colors. Each placed particle will take a random color from this list.
 -   `minDisplacement: float` - The distance (in px) to which any less displacement between particles has no more effect on the resultant force.
--   `particleRenderer: function(particle)` - Takes the particle to be rendered. Should output a HTML node.
+-   `particleRenderer: function(particle)` - Takes the particle to be rendered. Should output a string to be passed as innerHTML to associated element.
     -   E.g.
     ```
     gravity.config.particleRenderer: particle =>
