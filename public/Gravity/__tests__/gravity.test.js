@@ -53,7 +53,7 @@ describe('Gravity', () => {
                 enableBorder: true,
                 enableRandomParticleDirection: true,
                 disableGravity: true,
-                enableVerticalGravity: true,
+                interactionCalculator: jest.fn(),
                 enableDrawAnnotations: true,
                 enableDrawLinesBetweenParticles: true,
                 lineWidthBetweenParticles: true,
@@ -212,87 +212,54 @@ describe('Gravity', () => {
             gravity.particles = [new Particle(new Vector(0, 10)), new Particle(new Vector(10, 20))];
             gravity.gravity = true;
             gravity.dimensions = { width: 100, height: 200 };
+            gravity.reRenderParticle = jest.fn();
             gravity.updateParticleDomPositions = jest.fn();
             gravity.updateLinesBetweenParticles = jest.fn();
             window.requestAnimationFrame = jest.fn();
         });
 
+        afterEach(() => {
+            jest.clearAllMocks();
+        });
+
         it('does not run any calculations if the simulation is paused', () => {
             // Given
             gravity.paused = true;
+            gravity.interactionCalculator = jest.fn();
 
             // When
             const particle = gravity.particles[1];
             gravity.step();
 
             // Then
-            expect(particle.calculateVerticalForce).not.toHaveBeenCalled();
-            expect(particle.calculateForce).not.toHaveBeenCalled();
+            expect(gravity.interactionCalculator).not.toHaveBeenCalled(); // Once for each particle
             expect(particle.step).not.toHaveBeenCalled();
             expect(window.requestAnimationFrame).not.toHaveBeenCalled();
         });
 
-        it('calculates vertical force for each particle', () => {
-            // Given
-            gravity.verticalGravity = true;
-            gravity.verticalGravityVector = (0.5, 0.5);
-
-            // When
-            gravity.step();
-            const particle = gravity.particles[1];
-
-            // Then
-            expect(particle.calculateVerticalForce).toHaveBeenCalledTimes(1);
-            expect(particle.calculateVerticalForce).toHaveBeenCalledWith(
-                gravity.gravity,
-                gravity.dimensions,
-                gravity.verticalGravityVector
-            );
-
-            expect(particle.calculateForce).not.toHaveBeenCalled();
-
-            expect(particle.step).toHaveBeenCalledTimes(1);
-            expect(particle.step).toHaveBeenCalledWith({
-                bordered: gravity.bordered,
-                height: 200,
-                width: 100,
-                dampingFactor: 0.8,
-                delta: 0,
-            });
-
-            expect(gravity.updateParticleDomPositions).toHaveBeenCalledTimes(1);
-            expect(gravity.updateLinesBetweenParticles).toHaveBeenCalledTimes(1);
-
-            expect(window.requestAnimationFrame).toHaveBeenCalledTimes(1);
-        });
-
         it('calculates interaction force for each particle', () => {
             // Given
-            gravity.verticalGravity = false;
+            gravity.interactionCalculator = jest.fn();
 
             // When
             gravity.step();
             const particle = gravity.particles[1];
 
             // Then
-            expect(particle.calculateForce).toHaveBeenCalledTimes(1);
-            expect(particle.calculateForce).toHaveBeenCalledWith(
-                gravity.particles,
-                gravity.gravity,
-                gravity.dimensions,
-                gravity.MIN_DISPLACEMENT
-            );
-
-            expect(particle.calculateVerticalForce).not.toHaveBeenCalled();
+            expect(gravity.interactionCalculator).toHaveBeenCalledTimes(2); // Once for each particle
+            expect(gravity.interactionCalculator).toHaveBeenCalledWith(particle, gravity);
 
             expect(particle.step).toHaveBeenCalledTimes(1);
             expect(particle.step).toHaveBeenCalledWith({
-                bordered: gravity.bordered,
+                bordered: false,
                 height: 200,
                 width: 100,
                 dampingFactor: 1.0,
-                delta: null,
+                delta: 0,
             });
+
+            expect(gravity.reRenderParticle).toHaveBeenCalledTimes(2);
+            expect(gravity.reRenderParticle).toHaveBeenCalledWith(particle);
 
             expect(gravity.updateParticleDomPositions).toHaveBeenCalledTimes(1);
             expect(gravity.updateLinesBetweenParticles).toHaveBeenCalledTimes(1);
