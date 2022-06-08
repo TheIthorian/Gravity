@@ -69,59 +69,6 @@ export default class Particle {
     }
 
     /**
-     * Updates the instance's force vector from interactions with other particles.
-     * @param {Particle[]} particles All other particles to consider in the calculation
-     * @param {Boolean} gravity Whether gravity is enabled
-     * @param {{int, int}} dimensions The effective border
-     * @param {int} minDisplacement Minimum distance between particles at which the calculation will be considered
-     */
-    calculateForce(particles, gravity, { height, width }, minDisplacement) {
-        let resultantForce = new Vector(0, 0);
-
-        if (!gravity) {
-            this.resultantForce = resultantForce;
-            return;
-        }
-
-        for (let i = 0; i < particles.length; i++) {
-            const otherParticle = particles[i];
-            const isOtherInBounds = otherParticle.isWithinBounds(height, width);
-            const isInBounds = this.isWithinBounds(height, width);
-
-            if (otherParticle.id != this.id && isOtherInBounds && isInBounds) {
-                const displacement = this.findDisplacement(otherParticle);
-                const distance2 = Math.max(displacement.mod2(), minDisplacement);
-                const unitVector = displacement.findUnitVector();
-
-                const force = unitVector.multiply((G * otherParticle.mass) / distance2);
-                resultantForce = resultantForce.add(force);
-            }
-        }
-
-        this.resultantForce = resultantForce;
-    }
-
-    /**
-     * Updates the instance's force vector from a given effective vector.
-     * @param {boolean} gravity
-     * @param {{int, int}} param1
-     * @param {Vector} verticalGravityVector
-     */
-    calculateVerticalForce(gravity, { height, width }, verticalGravityVector) {
-        if (!gravity) {
-            this.resultantForce = new Vector(0, -0).multiply(1);
-            return;
-        }
-
-        if (!this.isWithinBounds(height, width)) {
-            this.resultantForce = verticalGravityVector.multiply(0.02);
-            return;
-        }
-
-        this.resultantForce = verticalGravityVector.multiply(0.5);
-    }
-
-    /**
      * Updates the particle's position and velocity from its resultant force.
      * @param {{boolean, int, int, double, double}} options
      */
