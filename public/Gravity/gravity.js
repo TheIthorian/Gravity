@@ -229,7 +229,7 @@ export default class Gravity {
         this.updateParticleDomPositions();
         this.updateLinesBetweenParticles();
 
-        window.requestAnimationFrame(() => {
+        this.animation = window.requestAnimationFrame(() => {
             this.step();
         });
     }
@@ -334,6 +334,7 @@ export default class Gravity {
     }
 
     reset() {
+        if (this.animation) window.cancelAnimationFrame(this.animation);
         this.particles.forEach(particle => {
             this.element.removeChild(particle.div);
         });
