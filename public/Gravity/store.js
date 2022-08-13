@@ -58,7 +58,7 @@ export class Store {
     /**
      * Clears all stores
      */
-    clearAll() {
+    static clearAll() {
         localStorage.clear();
     }
 }

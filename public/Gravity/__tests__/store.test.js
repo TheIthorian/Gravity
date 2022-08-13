@@ -109,7 +109,7 @@ describe('Store', () => {
             store2.set('item', 'value');
 
             // When
-            store.clearAll();
+            Store.clearAll();
 
             // Then
             expect(store.getAll()).toBeNull();
