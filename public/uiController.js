@@ -75,6 +75,11 @@ function hookAdditionalOptions(gravity) {
         toggleDisplayAdditionalOptionsMenu(e);
     });
 
+    document.getElementById('clear-cookies').addEventListener('click', () => {
+        Store.clearAll();
+        window.location.reload();
+    });
+
     OPTIONS.forEach(option => {
         const fn = option.action;
         const optionElm = document.getElementById(option.id);
