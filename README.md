@@ -30,12 +30,12 @@ This is an overview of the controls in our [example](https://theithorian.github.
 
 -   `Use Border?` > Adds a border around the edge of the window which particles will reflect off
 -   `Disable Gravity?` > No force calculations will be made to the particles
--   `Vertical Gravity?` > Particles will not interact with eachother.
+-   `Vertical Gravity?` > Particles will not interact with each other.
     -   On desktop, the particles will drop to the the ground.
-    -   On mobile, the particles will travel in a direction dependent on the device oritentation.
--   `Random Direction?` - Any new particales spawned will have a random direction and velocity.
+    -   On mobile, the particles will travel in a direction dependent on the device orientation.
+-   `Random Direction?` - Any new particles spawned will have a random direction and velocity.
 -   `Enable Annotations?` > Annotations will be visible and additional annotation options will be available.
--   `Enable Lines Between Particles?` > Each particle will emit a line to every other plents. It makes for a cool effect!
+-   `Enable Lines Between Particles?` > Each particle will emit a line to every other particle. It makes for a cool effect!
 -   `Minimum Effective Gravity Displacement` > The distance to which any less displacement between particles has no more effect on the resultant force. Used to prevent infinite acceleration when particles get too close.
 
 ### Shortcuts
@@ -82,7 +82,7 @@ gravity.setElement(myElement)
 
 ```
 
-In this example, now when `myElement` is clicked, a new particle is created and the simultation will start.
+In this example, now when `myElement` is clicked, a new particle is created and the simulation will start.
 
 ---
 
@@ -94,7 +94,7 @@ The `config` object determines how the interactions between particles will behav
 
 -   `enableBorder: boolean` - Enables the border around the container element.
 -   `enableRandomParticleDirection: boolean` - New particles will have a random direction.
--   `disableGravity: boolean` - Particles will not interact with eachother.
+-   `disableGravity: boolean` - Particles will not interact with each other.
 -   `interactionCalculator: function(particle, gravity)` - Called each step of the simulation. Mutates the given particle to update its position, velocity and resultant force to make the interaction.
 -   `enableDrawAnnotations: boolean` - Enables annotations.
 -   `enableDrawLinesBetweenParticles: boolean` - Each particle will emit a line to each other.
@@ -111,8 +111,8 @@ The `config` object determines how the interactions between particles will behav
 
 The `motionDetector` class contains additional functionality around detecting device motion and can be imported from `'Gravity/motionDetector.js'`. Instantiating this and passing to `Gravity()` will have the following effects:
 
--   If the client's broweser supports it and when `enableVerticalGravity=true`, the particles will drop in the direction of the Earth's gravity
--   If the client window is moved relative to the desktop, the absolute position of particles will remian the same. I.e. if the window is moved 100px to the right, every particle will be moved 100px to the left. This uses a custom event dispatcher.
+-   If the client's browser supports it and when `enableVerticalGravity=true`, the particles will drop in the direction of the Earth's gravity
+-   If the client window is moved relative to the desktop, the absolute position of particles will remain the same. I.e. if the window is moved 100px to the right, every particle will be moved 100px to the left. This uses a custom event dispatcher.
 
 #### Methods
 
@@ -121,7 +121,7 @@ The `motionDetector` class contains additional functionality around detecting de
 -   `addParticleToDom(particle)` - Adds a particle instance to the DOM associated with this instance.
 -   `clearAnnotations()` - Removes all annotations.
 -   `step()` - Moves the simulation forward 1 step.
--   `removeParticleById(id)` - Removes a particle with the associated id from the insatnce.
+-   `removeParticleById(id)` - Removes a particle with the associated id from the instance.
 -   `pauseSim()` - Pauses the simulation. No more steps are made until the sim is resumes.
 -   `startSim()`- Starts the simulation again if it is paused.
 -   `reset()` - Removes all particles from the instance
