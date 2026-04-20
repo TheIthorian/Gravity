@@ -2,6 +2,17 @@
 
 [View Example](https://theithorian.github.io/Gravity/)
 
+## Run with Docker
+
+From the repository root:
+
+```bash
+docker build -t gravity .
+docker run --rm -p 8080:80 gravity
+```
+
+Then open [http://localhost:8080](http://localhost:8080).
+
 ## Overview
 
 Simple interactive particle simulator.
